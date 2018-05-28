@@ -51,6 +51,8 @@ public class Account {
         this.aligoKey = aligoKey;
     }
 
+// * ModelMapper가 Long id 필드의 setter를 인식 못하게 롬복 안쓰고 setter 구현
+
     public void setAccountId(String accountId) {
         this.accountId = accountId;
     }

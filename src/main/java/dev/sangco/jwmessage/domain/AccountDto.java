@@ -15,6 +15,7 @@ public class AccountDto {
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PUBLIC)
     public static class Create {
+        // TODO 에러메세지 messages.properties로 옮기기
         @NotBlank(message = "아이디를 입력하세요.")
         @Size(min = 3, max = 20, message = "아이디는 최소4자 ~ 최대21자 입니다.")
         private String accountId;
