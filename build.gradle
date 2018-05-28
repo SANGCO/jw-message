@@ -25,12 +25,16 @@ repositories {
 
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-data-jpa')
-	compile('org.springframework.boot:spring-boot-starter-security')
-	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+//	compile('org.springframework.boot:spring-boot-starter-security')
+	compile('org.springframework.boot:spting-boot-starter-aop')
+	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+	compile('nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.2.2')
+	compile('org.modelmapper:modelmapper:1.1.0')
 	runtime('org.springframework.boot:spring-boot-devtools')
 	runtime('mysql:mysql-connector-java')
+//	TODO PostgreSQL로 디비 교체
 	compileOnly('org.projectlombok:lombok')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.security:spring-security-test')
