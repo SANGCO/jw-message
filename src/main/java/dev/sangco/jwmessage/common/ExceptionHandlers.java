@@ -25,12 +25,4 @@ public class ExceptionHandlers {
         errorResponse.setMessage("[" + e.getMessage() + "]" + msa.getMessage("duplicated.accountId.message"));
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
-
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity handleDataIntegrityViolationException(DataIntegrityViolationException e) {
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setCode(msa.getMessage("dataIntegrityViolation.code"));
-        errorResponse.setMessage(msa.getMessage(e.getRootCause().getMessage() + "dataIntegrityViolation.message"));
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
 }

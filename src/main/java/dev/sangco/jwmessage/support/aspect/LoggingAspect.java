@@ -21,13 +21,13 @@ public class LoggingAspect {
 
         final String methodName = pjp.getSignature().getName();
         if (!isUtilMethod(methodName)) {
-            log.debug("Spring AOP doLogging {}() : {}", methodName, pjp.getArgs());
+            log.debug("Spring AOP Before Logging {}() : {}", methodName, pjp.getArgs());
         }
 
         Object result = pjp.proceed();
 
         if (!isUtilMethod(methodName)) {
-            log.debug("Spring AOP doLogging {}() : result={}", methodName, result);
+            log.debug("Spring AOP After doLogging {}() : result={}", methodName, result);
         }
         return result;
     }

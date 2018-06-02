@@ -5,6 +5,8 @@ import dev.sangco.jwmessage.domain.Account;
 import dev.sangco.jwmessage.domain.AccountDto;
 import dev.sangco.jwmessage.domain.AccountRepository;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import javax.validation.Valid;
 @Transactional
 @Service
 public class AccountService {
+    public static final Logger log = LoggerFactory.getLogger(AccountService.class);
 
     @Autowired
     private AccountRepository accountRepository;
@@ -28,10 +31,13 @@ public class AccountService {
     public Account createAccount(AccountDto.Create accDtoCreate) {
         Account account = modelMapper.map(accDtoCreate, Account.class);
         String accountId = accDtoCreate.getAccountId();
-        if(accountRepository.findByAccountId(accountId) != null) {
+        accountRepository.findByAccountId(accountId).ifPresent(s -> {
             throw new AccountDuplicatedException(accountId);
-        }
-
+        });
         return accountRepository.save(account);
+    }
+
+    public void deleteAll() {
+        accountRepository.deleteAll();
     }
 }

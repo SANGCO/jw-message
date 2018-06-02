@@ -32,11 +32,6 @@ public class AccountDtoValidationTest {
         validator = validatorFactory.getValidator();
     }
 
-    @After
-    public void cleanUp() {
-        accountRepository.deleteAll();
-    }
-
     @Test
     public void when_accountId_is_Empty() {
         AccountDto.Create accDtoCreate = new AccountDto.Create(
