@@ -1,6 +1,7 @@
 package dev.sangco.jwmessage.service;
 
 import dev.sangco.jwmessage.common.AccountDuplicatedException;
+import dev.sangco.jwmessage.common.AccountNotFoundException;
 import dev.sangco.jwmessage.domain.Account;
 import dev.sangco.jwmessage.domain.AccountDto;
 import dev.sangco.jwmessage.domain.AccountRepository;
@@ -35,6 +36,10 @@ public class AccountService {
             throw new AccountDuplicatedException(accountId);
         });
         return accountRepository.save(account);
+    }
+
+    public Account findByAccountId(String accountId) {
+        return accountRepository.findByAccountId(accountId).orElseThrow(() -> new AccountNotFoundException(accountId));
     }
 
     public void deleteAll() {

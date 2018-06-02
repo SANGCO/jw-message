@@ -40,6 +40,9 @@ public class Account {
     @Column(nullable = false)
     private String aligoKey;
 
+    @Column(nullable = false)
+    private Role role;
+
     @Builder
     public Account(String accountId, String password, String name, String phoneNumb, String aligoId, String aligoKey) {
         this.createDate = createDate;
@@ -75,5 +78,9 @@ public class Account {
 
     public void setAligoKey(String aligoKey) {
         this.aligoKey = aligoKey;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
