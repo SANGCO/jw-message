@@ -1,7 +1,10 @@
 package dev.sangco.jwmessage.web;
 
 import dev.sangco.jwmessage.common.AccountDuplicatedException;
+import dev.sangco.jwmessage.domain.Account;
 import dev.sangco.jwmessage.domain.AccountDto;
+import dev.sangco.jwmessage.domain.AccountRepository;
+import dev.sangco.jwmessage.domain.Role;
 import dev.sangco.jwmessage.service.AccountService;
 import org.junit.After;
 import org.junit.Test;
@@ -30,6 +33,9 @@ public class ApiAccountAcceptanceTest {
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    AccountRepository accountRepository;
+
     @After
     public void cleanUp() {
         accountService.deleteAll();
@@ -49,7 +55,7 @@ public class ApiAccountAcceptanceTest {
         ResponseEntity<String> response = testRestTemplate.postForEntity("/api/accounts/join", accDtoCreate, String.class);
         log.debug("response body : ", response.getBody());
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
-        assertTrue(response.getBody().contains("bad.request"));
+        assertTrue(response.getBody().contains("badRequest"));
         assertTrue(response.getBody().contains("잘못된 요청입니다."));
         assertTrue(response.getBody().contains("아이디를 입력하세요."));
     }
@@ -63,6 +69,16 @@ public class ApiAccountAcceptanceTest {
         } catch (AccountDuplicatedException e) {
             assertThat(accountDto.getAccountId(), is(e.getMessage()));
         }
+    }
+
+    @Test
+    public void test() {
+        AccountDto.Create accountDto = getAccountDtoCreate();
+        Account account = accountService.createAccount(accountDto);
+        account.setRole(Role.ADMIN);
+        accountRepository.save(account);
+        ResponseEntity<String> response = testRestTemplate.withBasicAuth("test1213", "123456").getForEntity("/test", String.class);
+        log.debug(response.getBody());
     }
 
     private AccountDto.Create getAccountDtoCreate() {

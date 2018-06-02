@@ -19,4 +19,9 @@ public class ViewController {
     public String joinForm() {
         return "join";
     }
+
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public String test() {
+        return "test";
+    }
 }

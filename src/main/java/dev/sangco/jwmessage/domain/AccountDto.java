@@ -20,11 +20,10 @@ public class AccountDto {
         private String accountId;
 
         @NotBlank(message = "패스워드를 입력해주세요.")
-        @Size(min = 6, max = 20, message = "비밀번호는는 최소7자 ~ 최대21자 입니다.")
+        // password에 @Size 길이를 걸면 암호화해서 넣을 때 에러가 난다.
         private String password;
 
         @NotBlank(message = "패스워드 확인을 입력해주세요.")
-        @Size(min = 6, max = 20, message = "비밀번호는는 최소7자 ~ 최대21자 입니다.")
         private String cPassword;
 
         @NotBlank(message = "이름을 입력해주세요.")

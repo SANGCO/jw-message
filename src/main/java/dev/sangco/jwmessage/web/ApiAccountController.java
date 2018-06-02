@@ -38,8 +38,8 @@ public class ApiAccountController {
     public ResponseEntity createAccount(@RequestBody @Valid AccountDto.Create create, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             ErrorResponse errorResponse = new ErrorResponse();
-            errorResponse.setMessage(msa.getMessage("badRequest.message"));
-            errorResponse.setCode(msa.getMessage("badRequest.code"));
+            errorResponse.setMessage(msa.getMessage("badReq.c"));
+            errorResponse.setCode(msa.getMessage("badReq.m"));
 
             errorResponse.setFieldErrors(bindingResult.getFieldErrors().stream().map(error -> {
                 ErrorResponse.fieldError fieldError = new ErrorResponse.fieldError();

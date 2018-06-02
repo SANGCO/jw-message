@@ -5,11 +5,13 @@ import dev.sangco.jwmessage.common.AccountNotFoundException;
 import dev.sangco.jwmessage.domain.Account;
 import dev.sangco.jwmessage.domain.AccountDto;
 import dev.sangco.jwmessage.domain.AccountRepository;
+import dev.sangco.jwmessage.domain.Role;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -27,7 +29,7 @@ public class AccountService {
     private ModelMapper modelMapper;
 
     @Autowired
-    private MessageSourceAccessor msa;
+    private PasswordEncoder passwordEncoder;
 
     public Account createAccount(AccountDto.Create accDtoCreate) {
         Account account = modelMapper.map(accDtoCreate, Account.class);
@@ -35,6 +37,8 @@ public class AccountService {
         accountRepository.findByAccountId(accountId).ifPresent(s -> {
             throw new AccountDuplicatedException(accountId);
         });
+        account.setRole(Role.USER);
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
         return accountRepository.save(account);
     }
 

@@ -3,10 +3,7 @@ package dev.sangco.jwmessage.domain;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @ToString
@@ -25,7 +22,7 @@ public class Account {
     @Column(unique = true, nullable = false, length = 20)
     private String accountId;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false, length = 20)
@@ -40,7 +37,7 @@ public class Account {
     @Column(nullable = false)
     private String aligoKey;
 
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Builder
