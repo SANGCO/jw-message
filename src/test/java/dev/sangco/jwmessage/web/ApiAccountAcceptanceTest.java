@@ -127,6 +127,18 @@ public class ApiAccountAcceptanceTest extends AcceptanceTest {
         assertTrue(response.getBody().contains("권한이 없는 사용자 입니다."));
     }
 
+    @Test
+    public void deleteAccount_Test() {
+        Long id = defaultLoginAccount.getId();
+        URI uri = URI.create("http://localhost:" + port + "/api/accounts/" + id);
+
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity<Account> entity = new HttpEntity(headers);
+
+        ResponseEntity<String> response = basicAuthTemplate(defaultLoginAccount).exchange(uri, DELETE, entity, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.NO_CONTENT));
+    }
+
     private AccountDto.Create getAccountDtoCreate() {
         return new AccountDto.Create(
                 "test1213", "123456", "123456", "테스트",

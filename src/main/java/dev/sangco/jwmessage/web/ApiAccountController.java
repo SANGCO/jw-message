@@ -80,6 +80,12 @@ public class ApiAccountController {
         return new ResponseEntity<>(modelMapper.map(updatedAccount, AccountDto.Response.class), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/{id}", method = DELETE)
+    public ResponseEntity deleteAccount(@PathVariable Long id) {
+        accountService.deleteAccount(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     private ErrorResponse createErrorResponse(BindingResult bindingResult) {
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setMessage(msa.getMessage("badReq.c"));
