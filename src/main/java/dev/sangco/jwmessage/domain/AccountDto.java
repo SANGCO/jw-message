@@ -23,6 +23,7 @@ public class AccountDto {
         // password에 @Size 길이를 걸면 암호화해서 넣을 때 에러가 난다.
         private String password;
 
+        // TODO 패스워드 동일하게 들어 왔는지 확인하는 로직
         @NotBlank(message = "패스워드 확인을 입력해주세요.")
         private String cPassword;
 

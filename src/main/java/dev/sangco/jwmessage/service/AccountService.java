@@ -10,12 +10,12 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 
 @Transactional
 @Service
@@ -42,8 +42,16 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
+    public Account findById(Long id) {
+        return accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(String.valueOf(id)));
+    }
+
     public Account findByAccountId(String accountId) {
         return accountRepository.findByAccountId(accountId).orElseThrow(() -> new AccountNotFoundException(accountId));
+    }
+
+    public Page<Account> findAll(Pageable pageable) {
+        return accountRepository.findAll(pageable);
     }
 
     public void deleteAll() {
