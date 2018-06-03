@@ -1,6 +1,7 @@
 package dev.sangco.jwmessage.web;
 
 import dev.sangco.jwmessage.common.ErrorResponse;
+import dev.sangco.jwmessage.common.UnAuthenticationException;
 import dev.sangco.jwmessage.domain.Account;
 import dev.sangco.jwmessage.domain.AccountDto;
 import dev.sangco.jwmessage.service.AccountService;
@@ -43,18 +44,7 @@ public class ApiAccountController {
     @RequestMapping(value = "/join", method = POST)
     public ResponseEntity createAccount(@RequestBody @Valid AccountDto.Create create, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            ErrorResponse errorResponse = new ErrorResponse();
-            errorResponse.setMessage(msa.getMessage("badReq.c"));
-            errorResponse.setCode(msa.getMessage("badReq.m"));
-
-            errorResponse.setFieldErrors(bindingResult.getFieldErrors().stream().map(error -> {
-                ErrorResponse.fieldError fieldError = new ErrorResponse.fieldError();
-                fieldError.setField(error.getField());
-                fieldError.setMessage(error.getDefaultMessage());
-                return fieldError;
-            }).collect(Collectors.toList()));
-
-            return new ResponseEntity(errorResponse, BAD_REQUEST);
+            return new ResponseEntity(createErrorResponse(bindingResult), BAD_REQUEST);
         }
 
         return new ResponseEntity(modelMapper.map(accountService.createAccount(create), AccountDto.Response.class), OK);
@@ -66,7 +56,6 @@ public class ApiAccountController {
                 accountService.findById(id), AccountDto.Response.class), HttpStatus.OK);
     }
 
-    // TODO ADMIN 만 볼 수있게
     @RequestMapping(value = "", method = GET)
     public ResponseEntity getAccounts(Pageable pageable) {
         Page<Account> page = accountService.findAll(pageable);
@@ -75,5 +64,33 @@ public class ApiAccountController {
                 .collect(Collectors.toList());
         PageImpl<AccountDto.Response> result = new PageImpl<>(content, pageable, page.getTotalElements());
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{id}", method = PUT)
+    public ResponseEntity updateAccount(@PathVariable Long id, @RequestBody @Valid AccountDto.Update updateDto,
+                                        Principal principal, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(createErrorResponse(bindingResult), HttpStatus.BAD_REQUEST);
+        }
+
+        if (!accountService.findById(id).getAccountId().equalsIgnoreCase(principal.getName())) {
+            throw new UnAuthenticationException(String.valueOf(id));
+        }
+        Account updatedAccount = accountService.updateAccount(id, updateDto);
+        return new ResponseEntity<>(modelMapper.map(updatedAccount, AccountDto.Response.class), HttpStatus.OK);
+    }
+
+    private ErrorResponse createErrorResponse(BindingResult bindingResult) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setMessage(msa.getMessage("badReq.c"));
+        errorResponse.setCode(msa.getMessage("badReq.m"));
+        errorResponse.setFieldErrors(bindingResult.getFieldErrors().stream().map(error -> {
+            ErrorResponse.fieldError fieldError = new ErrorResponse.fieldError();
+            fieldError.setField(error.getField());
+            fieldError.setMessage(error.getDefaultMessage());
+            return fieldError;
+        }).collect(Collectors.toList()));
+
+        return errorResponse;
     }
 }

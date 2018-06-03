@@ -49,4 +49,13 @@ public class ExceptionHandlers {
         errorResponse.setMessage("[ " + e.getMessage() + " ] " + msa.getMessage("e.roleNotFound.m"));
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
+
+    @ExceptionHandler(UnAuthenticationException.class)
+    public ResponseEntity handleUnAuthenticationException(UnAuthenticationException e) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setCode(msa.getMessage("e.UnAuthentication.c"));
+        errorResponse.setMessage("[ " + e.getMessage() + " ] " + msa.getMessage("e.UnAuthentication.m"));
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 }

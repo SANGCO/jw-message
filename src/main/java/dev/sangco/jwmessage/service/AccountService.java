@@ -31,9 +31,9 @@ public class AccountService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public Account createAccount(AccountDto.Create accDtoCreate) {
-        Account account = modelMapper.map(accDtoCreate, Account.class);
-        String accountId = accDtoCreate.getAccountId();
+    public Account createAccount(AccountDto.Create createDto) {
+        Account account = modelMapper.map(createDto, Account.class);
+        String accountId = createDto.getAccountId();
         accountRepository.findByAccountId(accountId).ifPresent(s -> {
             throw new AccountDuplicatedException(accountId);
         });
@@ -52,6 +52,16 @@ public class AccountService {
 
     public Page<Account> findAll(Pageable pageable) {
         return accountRepository.findAll(pageable);
+    }
+
+    public Account updateAccount(Long id, AccountDto.Update updateDto) {
+        Account account = findById(id);
+        account.setPassword(updateDto.getPassword());
+        account.setName(updateDto.getName());
+        account.setPhoneNumb(updateDto.getPhoneNumb());
+        account.setAligoId(updateDto.getAligoId());
+        account.setAligoKey(updateDto.getAligoId());
+        return accountRepository.save(account);
     }
 
     public void deleteAll() {
