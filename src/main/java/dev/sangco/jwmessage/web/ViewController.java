@@ -43,6 +43,11 @@ public class ViewController {
     public String registForm() {
         return "/company/update";
     }
+    
+    @RequestMapping(value = "/companies/test", method = GET)
+    public String registTestForm() {
+    	return "/company/test";
+    }
 
     @RequestMapping(value = "/admin/test", method = GET)
     public String admin() {

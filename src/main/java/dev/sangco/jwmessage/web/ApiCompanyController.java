@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -24,18 +26,18 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RestController
 @RequestMapping("/api/companies")
 public class ApiCompanyController {
-    public static final Logger log =  LoggerFactory.getLogger(ApiCompanyController.class);
+	public static final Logger log = LoggerFactory.getLogger(ApiCompanyController.class);
 
-    @Autowired
-    private CompanyService companyService;
+	@Autowired
+	private CompanyService companyService;
 
-    @Autowired
-    private AccountService accountService;
+	@Autowired
+	private AccountService accountService;
 
-    @Autowired
-    private ExcelReadComponent excelReadComponent;
+	@Autowired
+	private ExcelReadComponent excelReadComponent;
 
-    @RequestMapping(value = (""), method = POST)
+	@RequestMapping(value = (""), method = POST)
     public ResponseEntity updateCompany(MultipartFile file, Principal principal) throws IOException, InvalidFormatException {
         List<Company> companies = excelReadComponent.readExcelToList(file, (row -> Company.ofRow(row)));
         log.debug("updateCompany() - Principal - getName() : {}", principal.getName());
@@ -46,4 +48,17 @@ public class ApiCompanyController {
 
         return new ResponseEntity(HttpStatus.OK);
     }
+
+	@RequestMapping(value = ("/test"), method = POST)
+    public Object updateTest(MultipartHttpServletRequest request) throws IOException, InvalidFormatException {
+    	Iterator<String> itr = request.getFileNames();
+    	return "good";
+	}
 }
+
+// List<Company> companies = excelReadComponent.readExcelToList(file, (row ->
+// Company.ofRow(row)));
+// for (Company company : companies) {
+// log.debug(company.toString());
+// }
+

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,12 +33,14 @@ public class UploadController {
 		return "upload";
 	}
 
-	@PostMapping("/excel")
-	public String readExcel(MultipartFile file) throws IOException, InvalidFormatException {
-		List<Company> companies = excelReadComponent.readExcelToList(file, (row -> Company.ofRow(row)));
-		for (Company company : companies) {
-			companyRepository.save(company);
-		}
+	@PostMapping("/upload/test")
+	public String readExcel(MultipartHttpServletRequest file) throws IOException, InvalidFormatException {
+		System.out.println(file.getContentType());
+//		List<Company> companies = excelReadComponent.readExcelToList(file, (row -> Company.ofRow(row)));
+//		for (Company company : companies) {
+//			System.out.println(company);
+//			companyRepository.save(company);
+//		}
 		return "redirect:/upload/form";
 	}
 }

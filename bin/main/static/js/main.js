@@ -40,3 +40,31 @@ function join_ajax_submit(e) {
         }
     });
 }
+
+$("#uploadForm button[type=submit]").click(function(event){
+	test_upload(event);
+ });
+
+function test_upload(e) {
+	console.log("test 클릭클릭")
+	e.preventDefault();
+
+	var form = $('form')[0];
+	var formData = new FormData(form);
+	$.ajax({
+		url : '/api/companies/test',
+		contentType: false,
+		processData: false,
+		data: formData,
+		enctype: 'multipart/form-data',
+		type : 'POST',
+		success : function(result) {
+			alert("업로드 성공!!");
+		},
+		error : function(error) {
+			alert("파일 업로드 실패");
+			console.log(error);
+		}
+	});
+
+};
