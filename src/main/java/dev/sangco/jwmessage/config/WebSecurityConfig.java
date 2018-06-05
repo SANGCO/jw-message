@@ -31,8 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        // TODO disable()한게 배포시에 올라가면 안된다.
+
         http.httpBasic();
 
         http.authorizeRequests()
@@ -41,6 +40,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/api/accounts/**").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "/admin/test/**").hasRole("ADMIN")
                 .anyRequest().permitAll();
+
+        http.csrf().disable();
+        // TODO disable()한게 배포시에 올라가면 안된다.
+
+        http.formLogin().loginPage("/accounts/login")
+                .usernameParameter("accountId")
+                .passwordParameter("password");
+
+        http.exceptionHandling().accessDeniedPage("/accessDenied");
+
+
+
     }
 
     @Override

@@ -26,7 +26,7 @@ public class AccountDto {
 
         // TODO 패스워드 동일하게 들어 왔는지 확인하는 로직
         @NotBlank(message = "패스워드 확인을 입력해주세요.")
-        private String cPassword;
+        private String cpassword;
 
         @NotBlank(message = "이름을 입력해주세요.")
         private String name;
@@ -69,7 +69,7 @@ public class AccountDto {
 
         // TODO 패스워드 동일하게 들어 왔는지 확인하는 로직
         @NotBlank(message = "패스워드 확인을 입력해주세요.")
-        private String cPassword;
+        private String cpassword;
 
         @NotBlank(message = "이름을 입력해주세요.")
         private String name;

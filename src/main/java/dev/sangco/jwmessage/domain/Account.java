@@ -5,6 +5,8 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @ToString
 @EqualsAndHashCode
@@ -13,6 +15,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Account {
     @Id
+    @Column
     @GeneratedValue
     private Long id;
 
@@ -39,6 +42,12 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "ACCOUNT_COMPANY",
+            joinColumns = @JoinColumn(name = "ACCOUNT_GENERATED_ID"),
+            inverseJoinColumns = @JoinColumn(name = "COMPANY_ID"))
+    private Set<Company> companies = new HashSet<>();
 
     @Builder
     public Account(String accountId, String password, String name, String phoneNumb, String aligoId, String aligoKey) {
@@ -79,5 +88,9 @@ public class Account {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public void setCompanies(Company company) {
+        this.companies.add(company);
     }
 }

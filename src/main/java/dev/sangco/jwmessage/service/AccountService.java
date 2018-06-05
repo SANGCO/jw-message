@@ -2,10 +2,7 @@ package dev.sangco.jwmessage.service;
 
 import dev.sangco.jwmessage.common.AccountDuplicatedException;
 import dev.sangco.jwmessage.common.AccountNotFoundException;
-import dev.sangco.jwmessage.domain.Account;
-import dev.sangco.jwmessage.domain.AccountDto;
-import dev.sangco.jwmessage.domain.AccountRepository;
-import dev.sangco.jwmessage.domain.Role;
+import dev.sangco.jwmessage.domain.*;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
@@ -62,6 +58,13 @@ public class AccountService {
         account.setAligoId(updateDto.getAligoId());
         account.setAligoKey(updateDto.getAligoId());
         return accountRepository.save(account);
+    }
+
+    public void updateAccountCompany(String accountId, Company company) {
+        Account account = findByAccountId(accountId);
+       if (account.getCompanies().stream().noneMatch(c -> c.getCompanyName().equalsIgnoreCase(company.getCompanyName()))) {
+           accountRepository.save(account);
+       }
     }
 
     public void deleteAccount(Long id) {

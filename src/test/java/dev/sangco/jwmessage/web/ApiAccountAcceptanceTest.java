@@ -4,13 +4,18 @@ import dev.sangco.jwmessage.common.AccountDuplicatedException;
 import dev.sangco.jwmessage.domain.Account;
 import dev.sangco.jwmessage.domain.AccountDto;
 import dev.sangco.jwmessage.domain.Role;
+import dev.sangco.jwmessage.support.excel.ExcelReadComponent;
 import dev.sangco.jwmessage.support.test.AcceptanceTest;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.junit.After;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -20,11 +25,6 @@ import static org.springframework.http.HttpMethod.*;
 
 public class ApiAccountAcceptanceTest extends AcceptanceTest {
     public static final Logger log = LoggerFactory.getLogger(ApiAccountAcceptanceTest.class);
-
-    @After
-    public void cleanUp() {
-        accountService.deleteAll();
-    }
 
     @Test
     public void createAccout_Test() {
@@ -58,15 +58,15 @@ public class ApiAccountAcceptanceTest extends AcceptanceTest {
         }
     }
 
-    @Test
-    public void role_Admin_Test() {
-        defaultLoginAccount.setRole(Role.ADMIN);
-        accountRepository.save(defaultLoginAccount);
-        ResponseEntity<String> response = basicAuthTemplate(defaultLoginAccount).getForEntity("/admin/test", String.class);
-        log.debug("role_Admin_Test() - getBody() : " + response.getBody());
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertTrue(response.getBody().contains("시큐러티 어드민 권한 테스트 중"));
-    }
+//    @Test
+//    public void role_Admin_Test() {
+//        defaultLoginAccount.setRole(Role.ADMIN);
+//        accountRepository.save(defaultLoginAccount);
+//        ResponseEntity<String> response = basicAuthTemplate(defaultLoginAccount).getForEntity("/admin/test", String.class);
+//        log.debug("role_Admin_Test() - getBody() : " + response.getBody());
+//        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+//        assertTrue(response.getBody().contains("시큐러티 어드민 권한 테스트 중"));
+//    }
 
     @Test
     public void getAccount_Test() {

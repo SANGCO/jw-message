@@ -42,7 +42,7 @@ public abstract class AcceptanceTest {
 
     @After
     public void cleanUp() {
-        accountRepository.deleteAll();
+        accountService.deleteAll();
     }
 
     protected TestRestTemplate basicAuthTemplate(Account paramAccount) {

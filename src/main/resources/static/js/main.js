@@ -1,4 +1,6 @@
-$("#join-form").click(join_ajax_submit);
+$("#join-form button[type=submit]").click(function(event){
+	join_ajax_submit(event);
+ });
 
 function join_ajax_submit(e) {
     console.log("클릭클릭")
@@ -8,7 +10,7 @@ function join_ajax_submit(e) {
 
     join["accountId"] = $("#accountId").val();
     join["password"] = $("#password").val();
-    join["cPassword"] = $("#cPassword").val();
+    join["cpassword"] = $("#cpassword").val();
     join["name"] = $("#name").val();
     join["phoneNumb"] = $("#phoneNumb").val();
     join["aligoId"] = $("#aligoId").val();
@@ -23,7 +25,7 @@ function join_ajax_submit(e) {
         data: JSON.stringify(join),
         dataType: 'json',
         success: function (response) {
-
+        	console.log(response.responseJSON);
         },
         error: function (response) {
             console.log(response.responseJSON);
