@@ -1,6 +1,25 @@
-{{#partial "contents"}}
+<!DOCTYPE html>
+<html lang="kr">
+<title>문자 발송 시스템</title>
+<meta charset="utf-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+<head>
+    <title>문자 발송 시스템</title>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.1/css/select.dataTables.min.css"></head>
+
+<body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="./index.html">JUNGWON</a>
+    <a class="navbar-brand" href="/">JUNGWON</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbar" aria-controls="navbar" aria-expanded="false"
             aria-label="Toggle navigation">
@@ -9,17 +28,18 @@
     <div class="collapse navbar-collapse justify-content-between"
          id="navbar">
         <div class="navbar-nav">
-            <a class="nav-item nav-link active" href="/">메인</a> 
-            <a class="nav-item nav-link" href="./index.html">메세지전송</a> 
-            <a class="nav-item nav-link" href="./event.html">결과조회</a> 
-            <a class="nav-item nav-link" href="./blog.html">수불정보조회</a>
+            <a class="nav-item nav-link active" href="/">메인</a>
+            <!-- 네비게이션바에 선택한 부분에 active 적용되게 --> 
+            <a class="nav-item nav-link" href="/message/form">메세지전송</a>
+            <a class="nav-item nav-link" href="/message/list">결과조회</a>
+            <a class="nav-item nav-link" href="/storage/list">수불정보조회</a>
         </div>
         <div class="navbar-nav mr-sm-2">
             <a class="nav-item nav-link" href="/accounts/login">로그인</a>
             <a class="nav-item nav-link" href="/accounts/join">회원가입</a>
-
-            <!--<a class="nav-item nav-link" href="./userLogout.html">로그아웃</a>-->
-            <!--<a class="nav-item nav-link" href="./userEdit.html">회원정보</a>-->
+			<!-- TODO 로그인시 네이게이션바 로그아웃으로 변경되게 -->
+            <!--<a class="nav-item nav-link" href="/account/logout">로그아웃</a>-->
+            <!--<a class="nav-item nav-link" href="/account/update">회원정보</a>-->
         </div>
     </div>
 </nav>
@@ -55,6 +75,13 @@
         </div>
     </div>
 
-{{/partial}}
-
-{{> base }}
+<footer class="bg-dark mt-4 p-4 text-center text-white">
+    Copyright &copy; SANGCO 2018 </footer>
+<script src="/js/jquery-3.2.1.min.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.2.1/js/dataTables.select.min.js"></script>
+<script src="/js/main.js"></script>
+</body>
+</html>

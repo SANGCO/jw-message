@@ -23,17 +23,13 @@ repositories {
 	mavenCentral()
 }
 
-
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-security')
-	compile('org.springframework.boot:spting-boot-starter-aop')
 	compile('pl.allegro.tech.boot:handlebars-spring-boot-starter:0.3.0')
 	compile('org.modelmapper:modelmapper:1.1.0')
-	compile('org.apache.poi:poi:3.17') // 3.16 .xls
-	compile('org.apache.poi:poi-ooxml:3.16') // .xlsx
-	compile ('commons-fileupload:commons-fileupload:1.3.1')
+	compile('org.apache.poi:poi-ooxml:3.16')
 	runtime('org.springframework.boot:spring-boot-devtools')
 	runtime('mysql:mysql-connector-java')
 //	TODO PostgreSQL로 디비 교체

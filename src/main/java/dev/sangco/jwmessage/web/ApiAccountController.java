@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+
 import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,6 +45,7 @@ public class ApiAccountController {
     @Autowired
     private MessageSourceAccessor msa;
 
+
     @RequestMapping(value = "/join", method = POST)
     public ResponseEntity createAccount(@RequestBody @Valid AccountDto.Create create, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -53,10 +55,10 @@ public class ApiAccountController {
         return new ResponseEntity(modelMapper.map(accountService.createAccount(create), AccountDto.Response.class), OK);
     }
 
-    @RequestMapping(value = "/{id}", method = GET)
-    public ResponseEntity getAccount(@PathVariable Long id) {
-        return new ResponseEntity<>(modelMapper.map(
-                accountService.findById(id), AccountDto.Response.class), HttpStatus.OK);
+    @RequestMapping(value = "/{accId}", method = GET)
+    public ResponseEntity getAccount(@PathVariable String accId) {
+        return new ResponseEntity(modelMapper.map(
+                accountService.findByAccId(accId), AccountDto.Response.class), HttpStatus.OK);
     }
 
     @RequestMapping(value = "", method = GET)
@@ -66,27 +68,28 @@ public class ApiAccountController {
                 .map(account -> modelMapper.map(account, AccountDto.Response.class))
                 .collect(Collectors.toList());
         PageImpl<AccountDto.Response> result = new PageImpl<>(content, pageable, page.getTotalElements());
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity(result, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}", method = PUT)
-    public ResponseEntity updateAccount(@PathVariable Long id, @RequestBody @Valid AccountDto.Update updateDto,
+    @RequestMapping(value = "/{accId}", method = PUT)
+    public ResponseEntity updateAccount(@PathVariable String accId, @RequestBody @Valid AccountDto.Update updateDto,
                                         Principal principal, BindingResult bindingResult) {
+
         if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(createErrorResponse(bindingResult), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(createErrorResponse(bindingResult), HttpStatus.BAD_REQUEST);
         }
 
-        if (!accountService.findById(id).getAccountId().equalsIgnoreCase(principal.getName())) {
-            throw new UnAuthenticationException(String.valueOf(id));
+        if (!accountService.findByAccId(accId).getAccId().equalsIgnoreCase(principal.getName())) {
+            throw new UnAuthenticationException(String.valueOf(accId));
         }
-        Account updatedAccount = accountService.updateAccount(id, updateDto);
-        return new ResponseEntity<>(modelMapper.map(updatedAccount, AccountDto.Response.class), HttpStatus.OK);
+        Account updatedAccount = accountService.updateAccount(accId, updateDto);
+        return new ResponseEntity(modelMapper.map(updatedAccount, AccountDto.Response.class), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}", method = DELETE)
-    public ResponseEntity deleteAccount(@PathVariable Long id) {
-        accountService.deleteAccount(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @RequestMapping(value = "/{accId}", method = DELETE)
+    public ResponseEntity deleteAccount(@PathVariable String accId) {
+        accountService.deleteByAccId(accId);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     private ErrorResponse createErrorResponse(BindingResult bindingResult) {
@@ -94,10 +97,10 @@ public class ApiAccountController {
         errorResponse.setMessage(msa.getMessage("badReq.c"));
         errorResponse.setCode(msa.getMessage("badReq.m"));
         errorResponse.setFieldErrors(bindingResult.getFieldErrors().stream().map(error -> {
-            ErrorResponse.fieldError fieldError = new ErrorResponse.fieldError();
-            fieldError.setField(error.getField());
-            fieldError.setMessage(error.getDefaultMessage());
-            return fieldError;
+            ErrorResponse.FieldError FieldError = new ErrorResponse.FieldError();
+            FieldError.setField(error.getField());
+            FieldError.setMessage(error.getDefaultMessage());
+            return FieldError;
         }).collect(Collectors.toList()));
 
         return errorResponse;

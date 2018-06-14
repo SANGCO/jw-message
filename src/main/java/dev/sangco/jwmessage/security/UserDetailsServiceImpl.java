@@ -1,6 +1,5 @@
 package dev.sangco.jwmessage.security;
 
-import dev.sangco.jwmessage.domain.Account;
 import dev.sangco.jwmessage.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +14,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private AccountService accountService;
 
     @Override
-    public UserDetails loadUserByUsername(String accountId) throws UsernameNotFoundException {
-        return new UserDetailsImpl(accountService.findByAccountId(accountId));
+    public UserDetails loadUserByUsername(String accId) throws UsernameNotFoundException {
+        return new UserDetailsImpl(accountService.findByAccId(accId));
     }
 }

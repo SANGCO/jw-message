@@ -3,25 +3,19 @@ package dev.sangco.jwmessage.web;
 import dev.sangco.jwmessage.common.AccountDuplicatedException;
 import dev.sangco.jwmessage.domain.Account;
 import dev.sangco.jwmessage.domain.AccountDto;
-import dev.sangco.jwmessage.domain.Role;
-import dev.sangco.jwmessage.support.excel.ExcelReadComponent;
 import dev.sangco.jwmessage.support.test.AcceptanceTest;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.junit.After;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.http.HttpMethod.*;
+import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.PUT;
 
 public class ApiAccountAcceptanceTest extends AcceptanceTest {
     public static final Logger log = LoggerFactory.getLogger(ApiAccountAcceptanceTest.class);
@@ -36,7 +30,7 @@ public class ApiAccountAcceptanceTest extends AcceptanceTest {
     @Test
     public void createAccout_BadRequest_Test() {
         AccountDto.Create accDtoCreate = getAccountDtoCreate();
-        accDtoCreate.setAccountId("");
+        accDtoCreate.setAccId("");
         ResponseEntity<String> response = testRestTemplate.postForEntity("/api/accounts/join", accDtoCreate, String.class);
         log.debug("createAccout_BadRequest_Test() - getBody() : " + response.getBody());
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
@@ -54,7 +48,7 @@ public class ApiAccountAcceptanceTest extends AcceptanceTest {
             log.debug("createAccount_Duplicated_AccountId_Test() - getBody() : " + response.getBody());
             assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
         } catch (AccountDuplicatedException e) {
-            assertThat(accountDto.getAccountId(), is(e.getMessage()));
+            assertThat(accountDto.getAccId(), is(e.getMessage()));
         }
     }
 
@@ -71,10 +65,10 @@ public class ApiAccountAcceptanceTest extends AcceptanceTest {
     @Test
     public void getAccount_Test() {
         ResponseEntity<String> response = basicAuthTemplate(defaultLoginAccount)
-                .getForEntity(("/api/accounts/" + defaultLoginAccount.getId() + ""), String.class);
+                .getForEntity(("/api/accounts/" + defaultLoginAccount.getAccId() + ""), String.class);
         log.debug("getAccount_Test() - getBody() : " + response.getBody());
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertTrue(response.getBody().contains(defaultLoginAccount.getAccountId()));
+        assertTrue(response.getBody().contains(defaultLoginAccount.getAccId()));
     }
 
     @Test
@@ -82,20 +76,21 @@ public class ApiAccountAcceptanceTest extends AcceptanceTest {
         ResponseEntity<String> response = basicAuthTemplate(defaultLoginAccount).getForEntity("/api/accounts", String.class);
         log.debug("getAccounts_Test() - getBody() : " + response.getBody());
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertTrue(response.getBody().contains(defaultLoginAccount.getAccId()));
     }
 
     @Test
     public void updateAccount_Test() {
-        Long id = defaultLoginAccount.getId();
+        String accId = defaultLoginAccount.getAccId();
         basicAuthTemplate(defaultLoginAccount)
-                .put(String.format("/api/accounts/%d", id), getAccountDtoUpdate());
-        assertThat(accountService.findById(id).getName(), is(getAccountDtoUpdate().getName()));
+                .put(String.format("/api/accounts/%s", accId), getAccountDtoUpdate());
+        assertThat(accountService.findByAccId(accId).getName(), is(getAccountDtoUpdate().getName()));
     }
 
     @Test
     public void updateAccount_Validation_Test() {
-        Long id = defaultLoginAccount.getId();
-        URI uri = URI.create("http://localhost:" + port + "/api/accounts/" + id);
+        String accId = defaultLoginAccount.getAccId();
+        URI uri = URI.create("http://localhost:" + port + "/api/accounts/" + accId);
 
         AccountDto.Update updateDto = getAccountDtoUpdate();
         updateDto.setName("");
@@ -107,13 +102,13 @@ public class ApiAccountAcceptanceTest extends AcceptanceTest {
         log.debug("updateAccount_Validation_Test() - getBody() : " + response.getBody());
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
         assertTrue(response.getBody().contains("이름을 입력해주세요."));
-        assertTrue(response.getBody().contains("Validation failed for object='update'."));
+        assertTrue(response.getBody().contains("Validation failed for object='update'"));
     }
 
     @Test
     public void updateAccount_UnAuthentication_Test() {
-        Long id = defaultAnotherAccount.getId();
-        URI uri = URI.create("http://localhost:" + port + "/api/accounts/" + id);
+        String accId = defaultAnotherAccount.getAccId();
+        URI uri = URI.create("http://localhost:" + port + "/api/accounts/" + accId);
 
         AccountDto.Update updateDto = getAccountDtoUpdate();
         HttpHeaders headers = new HttpHeaders();
@@ -124,30 +119,18 @@ public class ApiAccountAcceptanceTest extends AcceptanceTest {
         log.debug("updateAccount_UnAuthentication_Test() - getBody() : " + response.getBody());
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
         assertTrue(response.getBody().contains("UnAuthentication.exception"));
-        assertTrue(response.getBody().contains("권한이 없는 사용자 입니다."));
+        assertTrue(response.getBody().contains("[ anotherAccount ] 권한이 없는 사용자 입니다."));
     }
 
     @Test
     public void deleteAccount_Test() {
-        Long id = defaultLoginAccount.getId();
-        URI uri = URI.create("http://localhost:" + port + "/api/accounts/" + id);
+        String accId = defaultLoginAccount.getAccId();
+        URI uri = URI.create("http://localhost:" + port + "/api/accounts/" + accId);
 
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<Account> entity = new HttpEntity(headers);
 
         ResponseEntity<String> response = basicAuthTemplate(defaultLoginAccount).exchange(uri, DELETE, entity, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.NO_CONTENT));
-    }
-
-    private AccountDto.Create getAccountDtoCreate() {
-        return new AccountDto.Create(
-                "test1213", "123456", "123456", "테스트",
-                "01012345678", "알리고Id", "알리고Key");
-    }
-
-    private AccountDto.Update getAccountDtoUpdate() {
-        return new AccountDto.Update(
-                "123456", "123456", "업데이트테스트",
-                "01012345678", "알리고Id", "알리고Key");
     }
 }

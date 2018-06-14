@@ -1,17 +1,17 @@
 package dev.sangco.jwmessage.service;
 
-import dev.sangco.jwmessage.common.AccountNotFoundException;
-import dev.sangco.jwmessage.common.CompanyNotFoundException;
-import dev.sangco.jwmessage.domain.Company;
-import dev.sangco.jwmessage.domain.CompanyRepository;
+import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import dev.sangco.jwmessage.common.CompanyNotFoundException;
+import dev.sangco.jwmessage.domain.Company;
+import dev.sangco.jwmessage.domain.CompanyRepository;
 
 @Transactional
 @Service
@@ -22,9 +22,13 @@ public class CompanyService {
     private CompanyRepository companyRepository;
 
     public Company save(Company paramCompany) {
-        Optional<Company> company = companyRepository.findByCompanyName(paramCompany.getCompanyName());
-        company.ifPresent(c -> c.update(paramCompany));
-        return companyRepository.save(company.get());
+// TODO @ManyToMany면 달라져야 한다. 지금은 사용자가 엎어 써진다.
+    	Optional<Company> company = companyRepository.findByCompanyName(paramCompany.getCompanyName());
+    	if (company.isPresent()) {
+    		return company.get().update(paramCompany);
+    	}
+    	
+        return companyRepository.save(paramCompany);
     }
 
     public List<Company> findAll() {

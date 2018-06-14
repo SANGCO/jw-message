@@ -18,7 +18,7 @@ public class AccountDto {
 
         @NotBlank(message = "아이디를 입력하세요.")
         @Size(min = 3, max = 20, message = "아이디는 최소4자 ~ 최대21자 입니다.")
-        private String accountId;
+        private String accId;
 
         @NotBlank(message = "패스워드를 입력해주세요.")
         // password에 @Size 길이를 걸면 암호화해서 넣을 때 에러가 난다.
@@ -50,7 +50,7 @@ public class AccountDto {
     @NoArgsConstructor(access = AccessLevel.PUBLIC)
     public static class Response {
 
-        private String accountId;
+        private String accId;
         private String name;
         private String phoneNumb;
     }

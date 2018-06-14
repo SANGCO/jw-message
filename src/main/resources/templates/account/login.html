@@ -44,13 +44,14 @@
             <div class="panel-body">
                 <form id="login-form" action="/accounts/login" method="post">
                     <div>
-                        <input type="text" class="form-control" id="accountId"  name="accountId" placeholder="accountId" autofocus>
+                        <input type="text" class="form-control" id="accId"  name="accId" placeholder="AccountId" autofocus>
                     </div>
                     <div>
                         <input type="password" class="form-control" id="password" name="password" placeholder="Password">
                     </div>
                     <div>
                         <button type="submit" class="form-control btn btn-primary">로그인</button>
+						<!-- TODO csrf 적용, remember-me 구현 -->
                     </div>
                 </form>
             </div>

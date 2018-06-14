@@ -11,10 +11,10 @@ public class ErrorResponse {
 
     private String message;
 
-    private List<fieldError> fieldErrors;
+    private List<FieldError> FieldErrors;
 
     @Data
-    public static class fieldError {
+    public static class FieldError {
 
         private String field;
 

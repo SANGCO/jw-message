@@ -1,58 +1,50 @@
 package dev.sangco.jwmessage.domain;
 
+import dev.sangco.jwmessage.support.domain.BaseTimeEntity;
 import lombok.*;
 import org.apache.poi.ss.usermodel.Row;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-@ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "companyName", callSuper = false)
+@ToString(exclude = "account")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
-public class Company {
+public class Company extends BaseTimeEntity {
 
     @Id
-    @Column
-    @GeneratedValue
-    private Long id;
-
-    @CreatedDate
-    private LocalDateTime createDate;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     @Column(unique = true, nullable = false)
-    String companyName;
+    private String companyName;
 
     @Column(nullable = false)
-    String type;
+    private String type;
 
     @Column(nullable = false)
-    String personIncharge;
+    private String personIncharge;
 
     @Column(nullable = false)
-    String position;
+    private String position;
 
     @Column(nullable = false)
-    String contactNumb;
+    private String contactNumb;
 
-    // TODO 데이터가 많아지면 쿼리로 Company에서 해당하는 Account를 찾는 식으로
-//    @ManyToMany(mappedBy = "companies")
-//    private Set<Account> accounts = new HashSet<>();
+// TODO @ManyToMany로 가야할까?    
+    @ManyToOne
+    private Account account;
 
     @Builder
-    public Company(String companyName, String type, String personIncharge, String position, String contactNumb) {
+    public Company(String companyName, String type, String personIncharge, String position, String contactNumb, Account account) {
         this.companyName = companyName;
         this.type = type;
         this.personIncharge = personIncharge;
         this.position = position;
         this.contactNumb = contactNumb;
+        this.account = account;
     }
 
     public Company update(Company company) {
@@ -64,7 +56,14 @@ public class Company {
     }
 
     public static Company ofRow(Row row) {
-        return new Company(row.getCell(1).getStringCellValue(), row.getCell(5).getStringCellValue(),
-                row.getCell(4).getStringCellValue(), row.getCell(3).getStringCellValue(), row.getCell(10).getStringCellValue());
-    }
+        return Company.builder()
+                .companyName(row.getCell(1).getStringCellValue())
+                .type(row.getCell(5).getStringCellValue())
+                .personIncharge(row.getCell(4).getStringCellValue())
+                .position(row.getCell(3).getStringCellValue())
+                .contactNumb(row.getCell(10).getStringCellValue()).build();
+   }
+
+
 }
+

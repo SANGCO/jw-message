@@ -42,11 +42,11 @@ public abstract class AcceptanceTest {
 
     @After
     public void cleanUp() {
-        accountService.deleteAll();
+        accountRepository.deleteAll();
     }
 
     protected TestRestTemplate basicAuthTemplate(Account paramAccount) {
-        return testRestTemplate.withBasicAuth(paramAccount.getAccountId(), "123456");
+        return testRestTemplate.withBasicAuth(paramAccount.getAccId(), "123456");
     }
 
     protected AccountDto.Create getLoginAccount() {
@@ -57,5 +57,17 @@ public abstract class AcceptanceTest {
     protected AccountDto.Create getAnotherAccount() {
         return new AccountDto.Create("anotherAccount", "123456", "123456", "어나더어카운트",
                 "01012345678", "어나더알리고ID", "어나더알리고Key");
+    }
+
+    protected AccountDto.Create getAccountDtoCreate() {
+        return new AccountDto.Create(
+                "test1213", "123456", "123456", "테스트",
+                "01012345678", "알리고Id", "알리고Key");
+    }
+
+    protected AccountDto.Update getAccountDtoUpdate() {
+        return new AccountDto.Update(
+                "123456", "123456", "업데이트테스트",
+                "01012345678", "알리고Id", "알리고Key");
     }
 }

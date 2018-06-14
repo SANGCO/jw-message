@@ -16,7 +16,7 @@ public class UserDetailsImpl extends User {
     public static final Logger log =  LoggerFactory.getLogger(UserDetailsImpl.class);
 
     public UserDetailsImpl(Account account) {
-        super(account.getAccountId(), account.getPassword(), authorities(account));
+        super(account.getAccId(), account.getPassword(), authorities(account));
     }
 
     private static Collection<? extends GrantedAuthority> authorities(Account account) {

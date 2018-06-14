@@ -2,7 +2,11 @@ package dev.sangco.jwmessage.service;
 
 import dev.sangco.jwmessage.common.AccountDuplicatedException;
 import dev.sangco.jwmessage.common.AccountNotFoundException;
-import dev.sangco.jwmessage.domain.*;
+import dev.sangco.jwmessage.domain.Account;
+import dev.sangco.jwmessage.domain.AccountDto;
+import dev.sangco.jwmessage.domain.AccountRepository;
+import dev.sangco.jwmessage.domain.Company;
+import dev.sangco.jwmessage.domain.Role;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,29 +33,25 @@ public class AccountService {
 
     public Account createAccount(AccountDto.Create createDto) {
         Account account = modelMapper.map(createDto, Account.class);
-        String accountId = createDto.getAccountId();
-        accountRepository.findByAccountId(accountId).ifPresent(s -> {
-            throw new AccountDuplicatedException(accountId);
+        String accId = createDto.getAccId();
+        accountRepository.findByAccId(accId).ifPresent(s -> {
+            throw new AccountDuplicatedException(accId);
         });
         account.setRole(Role.USER);
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         return accountRepository.save(account);
     }
 
-    public Account findById(Long id) {
-        return accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(String.valueOf(id)));
-    }
-
-    public Account findByAccountId(String accountId) {
-        return accountRepository.findByAccountId(accountId).orElseThrow(() -> new AccountNotFoundException(accountId));
+    public Account findByAccId(String accId) {
+        return accountRepository.findByAccId(accId).orElseThrow(() -> new AccountNotFoundException(accId));
     }
 
     public Page<Account> findAll(Pageable pageable) {
         return accountRepository.findAll(pageable);
     }
 
-    public Account updateAccount(Long id, AccountDto.Update updateDto) {
-        Account account = findById(id);
+    public Account updateAccount(String accId, AccountDto.Update updateDto) {
+        Account account = findByAccId(accId);
         account.setPassword(updateDto.getPassword());
         account.setName(updateDto.getName());
         account.setPhoneNumb(updateDto.getPhoneNumb());
@@ -60,15 +60,16 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
-    public void updateAccountCompany(String accountId, Company company) {
-        Account account = findByAccountId(accountId);
-       if (account.getCompanies().stream().noneMatch(c -> c.getCompanyName().equalsIgnoreCase(company.getCompanyName()))) {
-           accountRepository.save(account);
-       }
-    }
+//    public void updateAccountCompany(String accId, Company company) {
+//        Account account = findByAccId(accId);
+//       if (account.getCompanies().stream().noneMatch(c -> c.getCompanyName().equalsIgnoreCase(company.getCompanyName()))) {
+//           accountRepository.save(account);
+//       }
+//       // TODO Arrays.asList() 이런식으로 리스트를 만들어서 세팅하기
+//    }
 
-    public void deleteAccount(Long id) {
-        accountRepository.deleteById(id);
+    public void deleteByAccId(String accId) {
+        accountRepository.deleteByAccId(accId);
     }
 
     public void deleteAll() {

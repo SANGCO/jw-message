@@ -17,6 +17,7 @@ public class ExceptionHandlers {
     @Autowired
     private MessageSourceAccessor msa;
 
+//  TODO API 방식이 아니라서 화면이 전환 되어야 한다.
     @ExceptionHandler(AccountDuplicatedException.class)
     public ResponseEntity handleAccountDuplicatedException(AccountDuplicatedException e) {
         ErrorResponse errorResponse = new ErrorResponse();

@@ -3,12 +3,9 @@ package dev.sangco.jwmessage.web;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
-
-import java.security.Principal;
 
 @Controller
 public class ViewController {
@@ -21,36 +18,48 @@ public class ViewController {
 
     @RequestMapping(value = "/accounts/join", method = GET)
     public String joinForm() {
-    	return "/account/join";
+        return "account/join";
     }
 
-    @RequestMapping(value = "/accounts/login")
+    //  For Spring Security
+    @RequestMapping(value = "/accounts/login", method = GET)
     public String login() {
-        return "/account/login";
+        return "account/login";
     }
 
-    @RequestMapping(value = "/logout")
+    @RequestMapping(value = "/accounts/logout", method = GET)
     public String logout() {
-        return "logout";
+        return "index";
     }
 
-    @RequestMapping(value = "/accessDenied")
+    @RequestMapping(value = "/accounts/accessDenied", method = GET)
     public String accessDenied() {
-        return "accessDenied";
+        return "account/accessDenied";
     }
 
-    @RequestMapping(value = "/companies/update", method = GET)
-    public String registForm() {
-        return "/company/update";
-    }
-    
-    @RequestMapping(value = "/companies/test", method = GET)
-    public String registTestForm() {
-    	return "/company/test";
+
+    @RequestMapping(value = "/accounts/update", method = GET)
+    public String update() {
+        return "account/update";
     }
 
-    @RequestMapping(value = "/admin/test", method = GET)
-    public String admin() {
-        return "admin";
+    @RequestMapping(value = "/message/form", method = GET)
+    public String messageForm() {
+        return "/message/form";
+    }
+
+    @RequestMapping(value = "/message/list", method = GET)
+    public String messageList() {
+        return "/message/list";
+    }
+
+    @RequestMapping(value = "/message/record", method = GET)
+    public String messageRecord() {
+        return "/message/record";
+    }
+
+    @RequestMapping(value = "/storage/list", method = GET)
+    public String storageList() {
+        return "/storage/list";
     }
 }
