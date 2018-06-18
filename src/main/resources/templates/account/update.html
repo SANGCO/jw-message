@@ -1,28 +1,17 @@
-{{#partial "contents"}}
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="./index.html">JUNGWON</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbar" aria-controls="navbar" aria-expanded="false"
-            aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-between"
-         id="navbar">
-        <div class="navbar-nav">
-            <a class="nav-item nav-link" href="/">메인</a> 
-            <a class="nav-item nav-link" href="./index.html">메세지전송</a> 
-            <a class="nav-item nav-link" href="./event.html">결과조회</a> 
-            <a class="nav-item nav-link" href="./blog.html">수불정보조회</a>
-        </div>
-        <div class="navbar-nav mr-sm-2">
-            <a class="nav-item nav-link" href="/accounts/login">로그인</a>
-            <a class="nav-item nav-link active" href="/accounts/join">회원가입</a>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default">
 
-            <!--<a class="nav-item nav-link" href="./userLogout.html">로그아웃</a>-->
-            <!--<a class="nav-item nav-link" href="./userEdit.html">회원정보</a>-->
-        </div>
-    </div>
-</nav>
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+</th:block>
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+</th:block>
+
+<div layout:fragment="content">
     <div class="container">
         <div class="list-group">
             <a href="#" class="list-group-item active">회원가입</a>
@@ -62,7 +51,5 @@
             </div>
         </div>
     </div>
-
-{{/partial}}
-
-{{> base }}
+</div>
+</html>

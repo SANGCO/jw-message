@@ -15,10 +15,7 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/custom.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.css"/>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"/>
-    <!--<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css"/>-->
-    <!--<link rel="stylesheet" href="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.10/css/dataTables.checkboxes.css"/>-->
-    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.1/css/select.dataTables.min.css">
+    <link rel="stylesheet" href="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.10/css/dataTables.checkboxes.css"/>
 </head>
 
 
@@ -33,9 +30,9 @@
     <div class="collapse navbar-collapse justify-content-between"
          id="navbar">
         <div class="navbar-nav">
-            <a class="nav-item nav-link active" href="/">메인</a>
+            <a class="nav-item nav-link" href="/">메인</a>
             <!-- 네비게이션바에 선택한 부분에 active 적용되게 -->
-            <a class="nav-item nav-link" href="/message/form">메세지전송</a>
+            <a class="nav-item nav-link active" href="/message/form">메세지전송</a>
             <a class="nav-item nav-link" href="/message/list">결과조회</a>
             <a class="nav-item nav-link" href="/storage/list">수불정보조회</a>
         </div>
@@ -48,6 +45,7 @@
         </div>
     </div>
 </nav>
+
 
 <style>
     body {
@@ -68,7 +66,7 @@
         <br/>
         <br/>
 
-        <form id="frm-example">
+
         <table id="companyTable" class="table table-striped table-bordered table-hover">
             <thead>
             <tr>
@@ -83,27 +81,30 @@
             </thead>
             <!-- tbody 태그 필요 없다. -->
         </table>
-            <hr>
 
-            <p><button type="submit">Submit</button></p>
-
-        </form>
         <br/>
         <br/>
         <br/>
-        <form name="question" method="post" action="/upload/send">
+        <form id="send-message">
             <div class="form-group">
                 <label for="title">제목</label> <input type="text"
                                                      class="form-control" id="title" name="title" placeholder="제목"/>
             </div>
             <div class="form-group">
-                <label for="contents">내용</label>
-                <textarea name="contents" id="contents" rows="5"
+                <label for="msg">내용</label>
+                <textarea name="msg" id="msg" rows="5"
                           class="form-control"></textarea>
             </div>
-            <button type="submit" class="btn btn-success clearfix pull-right">보내기</button>
+            <button type="submit" id="btn-submit" class="btn btn-success clearfix pull-right">보내기</button>
             <div class="clearfix"/>
         </form>
+
+        <br/>
+        <br/>
+        <br/>
+
+        <div id="response-data"></div>
+
     </div>
 </div>
 
@@ -114,10 +115,7 @@
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
 <script src="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.10/js/dataTables.checkboxes.min.js"></script>
-<script src="https://cdn.datatables.net/select/1.2.1/js/dataTables.select.min.js"></script>
 <script src="/js/main.js"></script>
 </body>
 </html>

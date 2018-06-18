@@ -49,25 +49,25 @@ public abstract class AcceptanceTest {
         return testRestTemplate.withBasicAuth(paramAccount.getAccId(), "123456");
     }
 
+    // TODO (처리요망) 여기도 키 값과 아이디가 들어간다.
     protected AccountDto.Create getLoginAccount() {
         return new AccountDto.Create("loginAccount", "123456", "123456", "로그인어카운트",
-                "01012345678", "로그인알리고ID", "로그인알리고Key");
+                "01047579824", "jwpro", "xemrqh2zv51u88p3o3b22z6yjmn8tv5x");
     }
 
     protected AccountDto.Create getAnotherAccount() {
         return new AccountDto.Create("anotherAccount", "123456", "123456", "어나더어카운트",
-                "01012345678", "어나더알리고ID", "어나더알리고Key");
+                "01047579824", "jwpro", "xemrqh2zv51u88p3o3b22z6yjmn8tv5x");
     }
-
     protected AccountDto.Create getAccountDtoCreate() {
         return new AccountDto.Create(
                 "test1213", "123456", "123456", "테스트",
-                "01012345678", "알리고Id", "알리고Key");
+                "01047579824", "jwpro", "xemrqh2zv51u88p3o3b22z6yjmn8tv5x");
     }
 
     protected AccountDto.Update getAccountDtoUpdate() {
         return new AccountDto.Update(
                 "123456", "123456", "업데이트테스트",
-                "01012345678", "알리고Id", "알리고Key");
+                "01012345678", "jwpro", "xemrqh2zv51u88p3o3b22z6yjmn8tv5x");
     }
 }

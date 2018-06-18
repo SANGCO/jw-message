@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<header th:fragment="navbarFragment">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="/">JUNGWON</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbar" aria-controls="navbar" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse justify-content-between" id="navbar">
+            <ul class="nav navbar-nav">
+                <li th:classappend="${view == 'index' ? 'active' : ''}">
+                    <a class="nav-item nav-link" href="/">메인</a>
+                </li>
+                <!-- 네비게이션바에 선택한 부분에 active 적용되게 -->
+                <li th:classappend="${view == 'messageForm' ? 'active' : ''}">
+                    <a class="nav-item nav-link" href="/message/form">메세지전송</a>
+                </li>
+                <li th:classappend="${view == 'messageList' ? 'active' : ''}">
+                    <a class="nav-item nav-link" href="/message/list">결과조회</a>
+                </li>
+                <li th:classappend="${view == 'storageList' ? 'active' : ''}">
+                    <a class="nav-item nav-link" href="/storage/list">수불정보조회</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav mr-sm-2" sec:authorize="!isAuthenticated()">
+                <li th:classappend="${view == 'login' ? 'active' : ''}">
+                    <a class="nav-item nav-link" href="/accounts/login">로그인</a>
+                </li>
+                <li th:classappend="${view == 'join' ? 'active' : ''}">
+                    <a class="nav-item nav-link" href="/accounts/join">회원가입</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav mr-sm-2" sec:authorize="isAuthenticated()">
+                <li th:classappend="${view == 'login' ? 'active' : ''}">
+                    <a class="nav-item nav-link" href="/accounts/logout">로그아웃</a>
+                </li>
+                <li th:classappend="${view == 'join' ? 'active' : ''}">
+                    <a class="nav-item nav-link" href="/accounts/update">회원정보</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+</html>

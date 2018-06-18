@@ -1,43 +1,58 @@
 @import url(https://fonts.googleapis.com/earlyaccess/jejugothic.css);
 @import url(https://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+
 .navbar-brand, h1, h2, h3, h4 {
-  font-family: 'Jeju Gothic';
+    font-family: 'Jeju Gothic';
 }
+
 h5 {
-  font-family: 'Jeju Gothic';
-  font-size: 18px;
+    font-family: 'Jeju Gothic';
+    font-size: 18px;
 }
+
 body {
-  font-family: 'Nanum Gothic';
+    font-family: 'Nanum Gothic';
+    background: #f8f8f8;
 }
-#header {
-  color: #ffffff;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  margin-bottom: 10px;
+
+.container {
+    margin-top: 80px;
 }
-#header small {
-  color: #cccccc;
-}
-#carousel .list-group {
-    padding-top: 20px;
-}
-.info {
-  margin-top: 3px;
-}
+
 .dropdown-toggle::after {
     content: none;
 }
-@media (max-width: 990px) {
-  .mobile {
-    display: none;
-  }
+
+#login-form > div {
+    padding: 10px;
 }
-.modal {
-  -webkit-transform: translate(0,-50%);
-   -o-transform: translate(0,-50%);
-   transform: translate(0,-50%);
-   top: 50%;
-   margin: 0 auto;
-   height: 720px;
+
+@media (max-width: 990px) {
+    .mobile {
+        display: none;
+    }
+}
+
+table.dataTable.dt-checkboxes-select tbody tr,
+table.dataTable thead th.dt-checkboxes-select-all,
+table.dataTable tbody td.dt-checkboxes-cell {
+    cursor: pointer;
+}
+
+table.dataTable thead th.dt-checkboxes-select-all,
+table.dataTable tbody td.dt-checkboxes-cell {
+    text-align: center;
+}
+
+div.dataTables_wrapper span.select-info,
+div.dataTables_wrapper span.select-item {
+    margin-left: 0.5em;
+}
+
+@media screen and (max-width: 640px) {
+    div.dataTables_wrapper span.select-info,
+    div.dataTables_wrapper span.select-item {
+        margin-left: 0;
+        display: block;
+    }
 }

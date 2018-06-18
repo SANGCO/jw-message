@@ -1,8 +1,8 @@
 // TODO STEP1 변수명 메소드명 정리하기
 
-$("#join-form button[type=submit]").click(function(event){
-	join_ajax_submit(event);
- });
+$("#join-form button[type=submit]").click(function (event) {
+    join_ajax_submit(event);
+});
 
 function join_ajax_submit(e) {
     console.log("클릭클릭")
@@ -27,7 +27,7 @@ function join_ajax_submit(e) {
         data: JSON.stringify(join),
         dataType: 'json',
         success: function (response) {
-        	console.log(response.responseJSON);
+            console.log(response.responseJSON);
         },
         error: function (response) {
             console.log(response.responseJSON);
@@ -35,7 +35,7 @@ function join_ajax_submit(e) {
             console.log(response.responseJSON.message);
             console.log(response.responseJSON.fieldErrors);
             var fieldErrors = response.responseJSON.fieldErrors;
-            for (var i=0; i < fieldErrors.length; i++) {
+            for (var i = 0; i < fieldErrors.length; i++) {
                 console.log(fieldErrors[i].field);
                 console.log(fieldErrors[i].message);
             }
@@ -43,37 +43,28 @@ function join_ajax_submit(e) {
     });
 }
 
-
 var companyTable;
-
-$("#frm-example button[type=submit]").click(function(event){
-    test(event);
-});
-
-function test(e) {
-    e.preventDefault();
-    console.log(companyTable.column(0).checkboxes.selected());
-}
-
+var rows_selected;
+var contactNumb;
 
 $("#uploadForm button[type=submit]").click(function(event){
-	test_upload(event);
- });
+    	test_upload(event);
+});
 
 function test_upload(e) {
-	console.log("test upload 클릭클릭")
-	e.preventDefault();
+    console.log("test upload 클릭클릭")
+    e.preventDefault();
 
-	var form = $('form')[0];
-	var formData = new FormData(form);
-	$.ajax({
-        type : "POST",
+    var form = $('form')[0];
+    var formData = new FormData(form);
+    $.ajax({
+        type: "POST",
         enctype: 'multipart/form-data',
-        url : '/api/companies/upload',
+        url: '/api/companies/upload',
         data: formData,
         processData: false,
         contentType: false,
-        cache : false,
+        cache: false,
         success: function (data) {
 
             $("#result").text(data);
@@ -81,19 +72,19 @@ function test_upload(e) {
             $("#btnSubmit").prop("disabled", false);
 
 
-            companyTable = $('#companyTable').dataTable({
+            companyTable = $('#companyTable').DataTable({
 
-                select : {
+                select: {
                     style: 'multi'
                 },
 
-                order : [[1, 'asc']],
+                order: [[1, 'asc']],
 
-                destroy : true,
+                destroy: true,
 
-                data : data,
+                data: data,
 
-                columns : [
+                columns: [
                     {
                         data: null,
                         defaultContent: '',
@@ -107,54 +98,18 @@ function test_upload(e) {
                     {data: "contactNumb"}
                 ],
 
-                columnDefs : [
+                columnDefs: [
                     {
-                        targets : 0,
-                        checkboxes : {
-                            selectRow : true
+                        targets: 0,
+                        checkboxes: {
+                            selectRow: true
                         }
                     }
                 ]
 
             });
 
-            // $('#userTable').DataTable().rows('.selected').data();
-
-
-            // Handle form submission event
-            // $('#frm-example').on('submit', function(e){
-            //     var form = this;
-            //
-            //     var rows_selected = companyTable.column(0).checkboxes.selected();
-            //
-            //     console.log(rows_selected.join(","))
-            //     // Iterate over all selected checkboxes
-            //     $.each(rows_selected, function(index, rowId){
-            //         // Create a hidden element
-            //         $(form).append(
-            //             $('<input>')
-            //                 .attr('type', 'hidden')
-            //                 .attr('name', 'id[]')
-            //                 .val(rowId)
-            //         );
-            //     });
-
-                // FOR DEMONSTRATION ONLY
-                // The code below is not needed in production
-
-                // Output form data to a console
-                // $('#example-console-rows').text(rows_selected.join(","));
-
-                // Output form data to a console
-                // $('#example-console-form').text($(form).serialize());
-
-                // Remove added elements
-                // $('input[name="id\[\]"]', form).remove();
-
-                // Prevent actual form submission
-                // e.preventDefault();
-
-
+            rows_selected = companyTable.column(0).checkboxes.selected().data();
 
         },
         error: function (e) {
@@ -164,5 +119,50 @@ function test_upload(e) {
             $("#btnSubmit").prop("disabled", false);
 
         }
-	});
+    });
 };
+// TODO 현재 몇글자 적었는지 보여주기(잘 만든거 가져다 쓰자)
+$("#send-message button[type=submit]").click(function (event) {
+    send_message_ajax_submit(event);
+});
+
+function send_message_ajax_submit(e) {
+    console.log("send_message_ajax_submit() 들어왔음")
+    e.preventDefault();
+
+    console.log(rows_selected);
+    contactNumb = [];
+
+    for (var i = 0; i < rows_selected.length; i++) {
+        contactNumb.push(rows_selected[i].contactNumb);
+    }
+
+    contactNumb = contactNumb.toString()
+    console.log(contactNumb);
+
+    var send = {};
+
+    send["title"] = $("#title").val();
+    send["msg"] = $("#msg").val();
+    send["contactNumb"] = contactNumb;
+
+    $("#btn-submit").prop("disabled", false);
+
+    $.ajax({
+        type: 'POST',
+        contentType: "application/json",
+        url: "/api/companies/send",
+        data: JSON.stringify(send),
+        dataType: 'json',
+        success: function (data) {
+            $("#response-data").append(JSON.stringify(data));
+        },
+        error: function (e) {
+
+            $("#result").text(e.responseText);
+            console.log("ERROR : ", e);
+            $("#btnSubmit").prop("disabled", false);
+
+        }
+    });
+}

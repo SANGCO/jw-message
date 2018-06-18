@@ -11,7 +11,6 @@ buildscript {
 }
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
@@ -27,12 +26,14 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-security')
-	compile('pl.allegro.tech.boot:handlebars-spring-boot-starter:0.3.0')
+	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+	compile('nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect')
+	compile('org.thymeleaf.extras:thymeleaf-extras-springsecurity4')
 	compile('org.modelmapper:modelmapper:1.1.0')
 	compile('org.apache.poi:poi-ooxml:3.16')
 	runtime('org.springframework.boot:spring-boot-devtools')
-	runtime('mysql:mysql-connector-java')
 //	TODO PostgreSQL로 디비 교체
+	runtime('mysql:mysql-connector-java')
 	compileOnly('org.projectlombok:lombok')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.security:spring-security-test')

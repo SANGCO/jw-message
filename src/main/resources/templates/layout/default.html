@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<header th:replace="fragments/header :: headerFragment"></header>
+
+<head th:replace="fragments/navbar :: navbarFragment"></head>
+
+<div layout:fragment="content"></div>
+
+<footer th:replace="fragments/footer:: footerFragment"></footer>
+
+</html>

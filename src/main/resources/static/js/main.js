@@ -47,29 +47,8 @@ var companyTable;
 var rows_selected;
 var contactNumb;
 
-$("#frm-example button[type=submit]").click(function (event) {
-    test(event);
-});
-
-function test(e) {
-
-    e.preventDefault();
-    console.log(rows_selected);
-    contactNumb = [];
-
-
-    for (var i = 0; i < rows_selected.length; i++) {
-        contactNumb.push(rows_selected[i].contactNumb);
-    }
-
-    contactNumb = contactNumb.toString()
-    console.log(contactNumb);
-
-}
-
-
-$("#uploadForm button[type=submit]").click(function (event) {
-    test_upload(event);
+$("#uploadForm button[type=submit]").click(function(event){
+    	test_upload(event);
 });
 
 function test_upload(e) {
@@ -151,6 +130,16 @@ function send_message_ajax_submit(e) {
     console.log("send_message_ajax_submit() 들어왔음")
     e.preventDefault();
 
+    console.log(rows_selected);
+    contactNumb = [];
+
+    for (var i = 0; i < rows_selected.length; i++) {
+        contactNumb.push(rows_selected[i].contactNumb);
+    }
+
+    contactNumb = contactNumb.toString()
+    console.log(contactNumb);
+
     var send = {};
 
     send["title"] = $("#title").val();
@@ -165,12 +154,31 @@ function send_message_ajax_submit(e) {
         url: "/api/companies/send",
         data: JSON.stringify(send),
         dataType: 'json',
-        success: function (response) {
-            console.log(response.responseJSON);
-        },
-        error: function (response) {
-            console.log(response.responseJSON);
-        }
+        success: function (data) {
+            // TODO result_code가 1, -101 if문으로 분기해서 tr td 뿌리기
+            // bootstrap tables 적용
+            // {
+            //     "result_code": 1
+            //     "message": ""
+            //     "msg_id": 123456789
+            //     "success_cnt": 2
+            //     "error_cnt": 0
+            //     "msg_type": "SMS"
+            // }
 
+            // {
+            //     "result_code": -101
+            //     "message": "인증오류입니다."
+            // }
+
+            $("#response-data").append(JSON.stringify(data));
+        },
+        error: function (e) {
+
+            $("#result").text(e.responseText);
+            console.log("ERROR : ", e);
+            $("#btnSubmit").prop("disabled", false);
+
+        }
     });
 }
