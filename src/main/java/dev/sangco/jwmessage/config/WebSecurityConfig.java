@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import static org.springframework.http.HttpMethod.*;
 
@@ -33,24 +34,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.httpBasic()
-
-        .and().authorizeRequests()
+                .and().authorizeRequests()
                 .antMatchers(GET, "/api/accounts/**").hasRole("USER")
                 .antMatchers(PUT, "/api/accounts/**").hasRole("USER")
                 .antMatchers(DELETE, "/api/accounts/**").hasRole("USER")
 //                .antMatchers(HttpMethod.GET, "/admin/test/**").hasRole("ADMIN")
                 .anyRequest().permitAll()
 
-        .and().csrf().disable()
-        // TODO disable()한게 배포시에 올라가면 안된다.
+//        .and().csrf().disable()
+                // TODO disable()한게 배포시에 올라가면 안된다.
 
-        .formLogin().loginPage("/accounts/login").defaultSuccessUrl("/")
+                .and().formLogin().loginPage("/accounts/login").failureUrl("/accounts/login?error=true")
+                .defaultSuccessUrl("/")
                 .usernameParameter("accId")
                 .passwordParameter("password")
 
-        .and().exceptionHandling().accessDeniedPage("/accountS/accessDenied")
+                .and().logout().logoutUrl("/accounts/logout").logoutSuccessUrl("/").invalidateHttpSession(true)
 
-        .and().logout().logoutUrl("/accountS/logout").invalidateHttpSession(true);
+                .and().exceptionHandling().accessDeniedPage("/accounts/accessDenied");
     }
 
     @Override

@@ -31,11 +31,11 @@ public class ViewController {
         return "account/login";
     }
 
-    @RequestMapping(value = "/accounts/logout", method = GET)
-    public String logout(Model model) {
-        model.addAttribute("view", "index");
-        return "index";
-    }
+//    @RequestMapping(value = "/accounts/logout", method = GET)
+//    public String logout(Model model) {
+//        model.addAttribute("view", "index");
+//        return "/account/logout";
+//    }
 
     @RequestMapping(value = "/accounts/accessDenied", method = GET)
     public String accessDenied(Model model) {

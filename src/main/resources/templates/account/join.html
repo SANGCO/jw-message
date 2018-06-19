@@ -46,7 +46,10 @@
                         <label>알리고 키</label>
                         <input type="text" class="form-control" id="aligoKey" placeholder="알리고 키를 입력해주세요.">
                     </div>
-                    <button type="submit" id="btn-submit" class="btn btn-primary">등록하기</button>
+                    <div>
+                        <input id="csrf" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <button type="submit" id="btn-submit" class="btn btn-primary">등록하기</button>
+                    </div>
                 </form>
             </div>
         </div>

@@ -18,14 +18,19 @@ function join_ajax_submit(e) {
     join["aligoId"] = $("#aligoId").val();
     join["aligoKey"] = $("#aligoKey").val();
 
+    var token = $("#csrf").val();
+
     $("#btn-submit").prop("disabled", true);
 
     $.ajax({
         type: "POST",
-        contentType: "application/json",
         url: "/api/accounts/join",
         data: JSON.stringify(join),
         dataType: 'json',
+        beforeSend : function(xhr){
+            xhr.setRequestHeader("X-CSRF-TOKEN", token);
+        },
+        contentType: "application/json",
         success: function (response) {
             console.log(response.responseJSON);
         },
