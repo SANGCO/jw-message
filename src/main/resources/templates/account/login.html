@@ -33,7 +33,7 @@
                                placeholder="Password">
                     </div>
                     <div class="checkbox">
-                        <label><input type="checkbox"> Remember me</label>
+                        <label><input type="checkbox" id="remember-me" name="remember-me" checked="checked"> Remember me</label>
                     </div>
                     <div>
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />

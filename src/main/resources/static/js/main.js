@@ -51,7 +51,7 @@ function join_ajax_submit(e) {
 var companyTable;
 var rows_selected;
 var contactNumb;
-
+// TODO CSRF 적용
 $("#uploadForm button[type=submit]").click(function(event){
     	test_upload(event);
 });
@@ -130,6 +130,8 @@ function test_upload(e) {
 $("#send-message button[type=submit]").click(function (event) {
     send_message_ajax_submit(event);
 });
+
+// TODO CSRF 적용
 
 function send_message_ajax_submit(e) {
     console.log("send_message_ajax_submit() 들어왔음")
