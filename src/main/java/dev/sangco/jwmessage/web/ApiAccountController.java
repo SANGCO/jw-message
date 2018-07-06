@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import java.security.Principal;
@@ -45,16 +46,6 @@ public class ApiAccountController {
     @Autowired
     private MessageSourceAccessor msa;
 
-
-    @RequestMapping(value = "/join", method = POST)
-    public ResponseEntity createAccount(@RequestBody @Valid AccountDto.Create create, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity(createErrorResponse(bindingResult), BAD_REQUEST);
-        }
-
-        return new ResponseEntity(modelMapper.map(accountService.createAccount(create), AccountDto.Response.class), OK);
-    }
-
     @RequestMapping(value = "/{accId}", method = GET)
     public ResponseEntity getAccount(@PathVariable String accId) {
         return new ResponseEntity(modelMapper.map(
@@ -69,21 +60,6 @@ public class ApiAccountController {
                 .collect(Collectors.toList());
         PageImpl<AccountDto.Response> result = new PageImpl<>(content, pageable, page.getTotalElements());
         return new ResponseEntity(result, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/{accId}", method = PUT)
-    public ResponseEntity updateAccount(@PathVariable String accId, @RequestBody @Valid AccountDto.Update updateDto,
-                                        Principal principal, BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity(createErrorResponse(bindingResult), HttpStatus.BAD_REQUEST);
-        }
-
-        if (!accountService.findByAccId(accId).getAccId().equalsIgnoreCase(principal.getName())) {
-            throw new UnAuthenticationException(String.valueOf(accId));
-        }
-        Account updatedAccount = accountService.updateAccount(accId, updateDto);
-        return new ResponseEntity(modelMapper.map(updatedAccount, AccountDto.Response.class), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{accId}", method = DELETE)

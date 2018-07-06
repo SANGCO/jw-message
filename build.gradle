@@ -31,10 +31,9 @@ dependencies {
 	compile('org.thymeleaf.extras:thymeleaf-extras-springsecurity4')
 	compile('org.modelmapper:modelmapper:1.1.0')
 	compile('org.apache.poi:poi-ooxml:3.16')
-	runtime('org.springframework.boot:spring-boot-devtools')
-//	TODO PostgreSQL로 디비 교체
-	runtime('mysql:mysql-connector-java')
+	compile('org.postgresql:postgresql')
 	compileOnly('org.projectlombok:lombok')
+	runtime('org.springframework.boot:spring-boot-devtools')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.security:spring-security-test')
 }

@@ -4,6 +4,7 @@ import dev.sangco.jwmessage.support.domain.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @EqualsAndHashCode(of = "accId", callSuper = false)
 @ToString
@@ -34,6 +35,10 @@ public class Account extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_account_company"))
+    private List<Company> company;
 
     @Builder
     public Account(String accId, String password, String name, String phoneNumb, String aligoId, String aligoKey, Role role) {

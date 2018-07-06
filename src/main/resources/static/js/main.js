@@ -1,52 +1,52 @@
 // TODO STEP1 변수명 메소드명 정리하기
 
-$("#join-form button[type=submit]").click(function (event) {
-    join_ajax_submit(event);
-});
-
-function join_ajax_submit(e) {
-    console.log("클릭클릭")
-    e.preventDefault();
-
-    var join = {};
-
-    join["accId"] = $("#accId").val();
-    join["password"] = $("#password").val();
-    join["cpassword"] = $("#cpassword").val();
-    join["name"] = $("#name").val();
-    join["phoneNumb"] = $("#phoneNumb").val();
-    join["aligoId"] = $("#aligoId").val();
-    join["aligoKey"] = $("#aligoKey").val();
-
-    var token = $("#csrf").val();
-
-    $("#btn-submit").prop("disabled", true);
-
-    $.ajax({
-        type: "POST",
-        url: "/api/accounts/join",
-        data: JSON.stringify(join),
-        dataType: 'json',
-        beforeSend : function(xhr){
-            xhr.setRequestHeader("X-CSRF-TOKEN", token);
-        },
-        contentType: "application/json",
-        success: function (response) {
-            console.log(response.responseJSON);
-        },
-        error: function (response) {
-            console.log(response.responseJSON);
-            console.log(response.responseJSON.code);
-            console.log(response.responseJSON.message);
-            console.log(response.responseJSON.fieldErrors);
-            var fieldErrors = response.responseJSON.fieldErrors;
-            for (var i = 0; i < fieldErrors.length; i++) {
-                console.log(fieldErrors[i].field);
-                console.log(fieldErrors[i].message);
-            }
-        }
-    });
-}
+// $("#join-form button[type=submit]").click(function (event) {
+//     join_ajax_submit(event);
+// });
+//
+// function join_ajax_submit(e) {
+//     console.log("join_ajax_submit()")
+//     e.preventDefault();
+//
+//     var join = {};
+//
+//     join["accId"] = $("#accId").val();
+//     join["password"] = $("#password").val();
+//     join["cpassword"] = $("#cpassword").val();
+//     join["name"] = $("#name").val();
+//     join["phoneNumb"] = $("#phoneNumb").val();
+//     join["aligoId"] = $("#aligoId").val();
+//     join["aligoKey"] = $("#aligoKey").val();
+//
+//     var token = $("#csrf").val();
+//
+//     $("#btn-submit").prop("disabled", true);
+//
+//     $.ajax({
+//         type: "POST",
+//         url: "/api/accounts/join",
+//         data: JSON.stringify(join),
+//         dataType: 'json',
+//         beforeSend : function(xhr){
+//             xhr.setRequestHeader("X-CSRF-TOKEN", token);
+//         },
+//         contentType: "application/json",
+//         success: function (response) {
+//             console.log(response.responseJSON);
+//         },
+//         error: function (response) {
+//             console.log(response.responseJSON);
+//             console.log(response.responseJSON.code);
+//             console.log(response.responseJSON.message);
+//             console.log(response.responseJSON.fieldErrors);
+//             var fieldErrors = response.responseJSON.fieldErrors;
+//             for (var i = 0; i < fieldErrors.length; i++) {
+//                 console.log(fieldErrors[i].field);
+//                 console.log(fieldErrors[i].message);
+//             }
+//         }
+//     });
+// }
 
 var companyTable;
 var rows_selected;
@@ -57,7 +57,7 @@ $("#uploadForm button[type=submit]").click(function(event){
 });
 
 function test_upload(e) {
-    console.log("test upload 클릭클릭")
+    console.log('test upload 클릭클릭')
     e.preventDefault();
 
     var form = $('form')[0];
@@ -189,3 +189,46 @@ function send_message_ajax_submit(e) {
         }
     });
 }
+
+var calByte = {
+    getByteLength : function(s) {
+
+        if (s == null || s.length == 0) {
+            return 0;
+        }
+        var size = 0;
+
+        for ( var i = 0; i < s.length; i++) {
+            size += this.charByteSize(s.charAt(i));
+        }
+
+        return size;
+    },
+
+    charByteSize : function(ch) {
+
+        if(encodeURIComponent(ch).length > 4)
+        {
+            return 2;
+        }
+        else
+        {
+            return 1;
+        }
+    }
+};
+
+$("textarea").on("keyup", function(){
+
+    var numChar = calByte.getByteLength($(this).val());
+    var maxNum = 2000;
+    var charRemain = maxNum - numChar;
+    $("span > em").text(charRemain);
+    if(charRemain < 0){
+        $("span > em").addClass("warning");
+        $("#btn-submit").prop("disabled", true);
+    } else {
+        $("span > em").removeClass("warning");
+        $("#btn-submit").prop("disabled", false);
+    }
+});

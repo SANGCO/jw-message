@@ -7,7 +7,7 @@ import org.apache.poi.ss.usermodel.Row;
 import javax.persistence.*;
 
 @EqualsAndHashCode(of = "companyName", callSuper = false)
-@ToString(exclude = "account")
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
@@ -33,18 +33,13 @@ public class Company extends BaseTimeEntity {
     @Column(nullable = false)
     private String contactNumb;
 
-// TODO @ManyToMany로 가야할까?    
-    @ManyToOne
-    private Account account;
-
     @Builder
-    public Company(String companyName, String type, String personIncharge, String position, String contactNumb, Account account) {
+    public Company(String companyName, String type, String personIncharge, String position, String contactNumb) {
         this.companyName = companyName;
         this.type = type;
         this.personIncharge = personIncharge;
         this.position = position;
         this.contactNumb = contactNumb;
-        this.account = account;
     }
 
     public Company update(Company company) {
@@ -63,7 +58,5 @@ public class Company extends BaseTimeEntity {
                 .position(row.getCell(3).getStringCellValue())
                 .contactNumb(row.getCell(10).getStringCellValue()).build();
    }
-
-
 }
 

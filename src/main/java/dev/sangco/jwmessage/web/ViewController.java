@@ -18,38 +18,6 @@ public class ViewController {
         return "index";
     }
 
-    @RequestMapping(value = "/accounts/join", method = GET)
-    public String joinForm(Model model) {
-        model.addAttribute("view", "join");
-        return "account/join";
-    }
-
-    //  For Spring Security
-    @RequestMapping(value = "/accounts/login", method = GET)
-    public String login(Model model) {
-        model.addAttribute("view", "login");
-        return "account/login";
-    }
-
-//    @RequestMapping(value = "/accounts/logout", method = GET)
-//    public String logout(Model model) {
-//        model.addAttribute("view", "index");
-//        return "/account/logout";
-//    }
-
-    @RequestMapping(value = "/accounts/accessDenied", method = GET)
-    public String accessDenied(Model model) {
-        model.addAttribute("view", "accessDenied");
-        return "account/accessDenied";
-    }
-
-
-    @RequestMapping(value = "/accounts/update", method = GET)
-    public String update(Model model) {
-        model.addAttribute("view", "update");
-        return "account/update";
-    }
-
     @RequestMapping(value = "/message/form", method = GET)
     public String messageForm(Model model) {
         model.addAttribute("view", "messageForm");

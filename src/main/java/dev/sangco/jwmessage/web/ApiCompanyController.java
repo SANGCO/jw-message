@@ -46,7 +46,7 @@ public class ApiCompanyController {
     private ModelMapper modelMapper;
 
 
-
+// TODO uploadCompanies 메소드 만들기
     @RequestMapping(value = "/upload", method = POST)
     public ResponseEntity uploadCompanies(@RequestParam("file") MultipartFile uploadfile, Principal principal) throws IOException, InvalidFormatException {
         List<Company> companies = excelReadComponent.readExcelToList(uploadfile, (row -> Company.ofRow(row)));
@@ -58,7 +58,6 @@ public class ApiCompanyController {
 //			companyService.save(company);
 //		}
 
-        CompanyDto companyDto = new CompanyDto();
 
 
         List<CompanyDto.Response> companyDtos = companies.stream().map(c -> {
@@ -69,7 +68,7 @@ public class ApiCompanyController {
         return new ResponseEntity(companyDtos, HttpStatus.OK);
     }
 
-
+// TODO .testmode_yn("Y").build().ofEntity(); 이부분이 MessageDto.Create 통해서 들어와야 한다.
     @RequestMapping(value = "/send", method = POST)
     public ResponseEntity sendMessage(@RequestBody MessageDto.Create messageDto, Principal principal) {
         log.debug("어떤 값이 들어왔는고~~~~ " + messageDto.toString());
