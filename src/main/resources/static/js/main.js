@@ -208,10 +208,8 @@ var calByte = {
 $("textarea").on("keyup", function(){
 
     var numChar = calByte.getByteLength($(this).val());
-    var maxNum = 2000;
-    var charRemain = maxNum - numChar;
-    $("span > em").text(charRemain);
-    if(charRemain < 0){
+    $("span > em").text(numChar);
+    if(numChar > 2000){
         $("span > em").addClass("warning");
         $("#btn-submit").prop("disabled", true);
     } else {
