@@ -1,72 +1,30 @@
 // TODO STEP1 변수명 메소드명 정리하기
 
-// $("#join-form button[type=submit]").click(function (event) {
-//     join_ajax_submit(event);
-// });
-//
-// function join_ajax_submit(e) {
-//     console.log("join_ajax_submit()")
-//     e.preventDefault();
-//
-//     var join = {};
-//
-//     join["accId"] = $("#accId").val();
-//     join["password"] = $("#password").val();
-//     join["cpassword"] = $("#cpassword").val();
-//     join["name"] = $("#name").val();
-//     join["phoneNumb"] = $("#phoneNumb").val();
-//     join["aligoId"] = $("#aligoId").val();
-//     join["aligoKey"] = $("#aligoKey").val();
-//
-//     var token = $("#csrf").val();
-//
-//     $("#btn-submit").prop("disabled", true);
-//
-//     $.ajax({
-//         type: "POST",
-//         url: "/api/accounts/join",
-//         data: JSON.stringify(join),
-//         dataType: 'json',
-//         beforeSend : function(xhr){
-//             xhr.setRequestHeader("X-CSRF-TOKEN", token);
-//         },
-//         contentType: "application/json",
-//         success: function (response) {
-//             console.log(response.responseJSON);
-//         },
-//         error: function (response) {
-//             console.log(response.responseJSON);
-//             console.log(response.responseJSON.code);
-//             console.log(response.responseJSON.message);
-//             console.log(response.responseJSON.fieldErrors);
-//             var fieldErrors = response.responseJSON.fieldErrors;
-//             for (var i = 0; i < fieldErrors.length; i++) {
-//                 console.log(fieldErrors[i].field);
-//                 console.log(fieldErrors[i].message);
-//             }
-//         }
-//     });
-// }
-
 var companyTable;
 var rows_selected;
 var contactNumb;
+
 // TODO CSRF 적용
 $("#uploadForm button[type=submit]").click(function(event){
-    	test_upload(event);
+    	excel_upload(event);
 });
 
-function test_upload(e) {
+function excel_upload(e) {
     console.log('test upload 클릭클릭')
     e.preventDefault();
 
-    var form = $('form')[0];
+    var form = $("#uploadForm")[0];
     var formData = new FormData(form);
+    var token = $("#csrf").val();
+
     $.ajax({
         type: "POST",
-        enctype: 'multipart/form-data',
-        url: '/api/companies/upload',
+        enctype: "multipart/form-data",
+        url: "/api/companies/upload",
         data: formData,
+        beforeSend : function(xhr){
+            xhr.setRequestHeader("X-CSRF-TOKEN", token);
+        },
         processData: false,
         contentType: false,
         cache: false,
@@ -126,12 +84,11 @@ function test_upload(e) {
         }
     });
 };
+
 // TODO 현재 몇글자 적었는지 보여주기(잘 만든거 가져다 쓰자)
 $("#send-message button[type=submit]").click(function (event) {
     send_message_ajax_submit(event);
 });
-
-// TODO CSRF 적용
 
 function send_message_ajax_submit(e) {
     console.log("send_message_ajax_submit() 들어왔음")
@@ -148,6 +105,7 @@ function send_message_ajax_submit(e) {
     console.log(contactNumb);
 
     var send = {};
+    var token = $("#csrf").val();
 
     send["title"] = $("#title").val();
     send["msg"] = $("#msg").val();
@@ -161,6 +119,9 @@ function send_message_ajax_submit(e) {
         url: "/api/companies/send",
         data: JSON.stringify(send),
         dataType: 'json',
+        beforeSend : function(xhr){
+            xhr.setRequestHeader("X-CSRF-TOKEN", token);
+        },
         success: function (data) {
             // TODO result_code가 1, -101 if문으로 분기해서 tr td 뿌리기
             // bootstrap tables 적용
@@ -207,14 +168,40 @@ var calByte = {
 
     charByteSize : function(ch) {
 
-        if(encodeURIComponent(ch).length > 4)
-        {
+        // if(encodeURIComponent(ch).length > 4)
+        // {
+        //     return 2;
+        // }
+        // else
+        // {
+        //     return 1;
+        // }
+
+        if (ch == null || ch.length == 0) {
+            return 0;
+        }
+
+        var charCode = ch.charCodeAt(0);
+
+        if (charCode <= 0x00007F) {
+            return 1;
+        } else if (charCode <= 0x0007FF) {
+            return 2;
+        } else if (charCode <= 0x00FFFF) {
+            return 2;
+        } else {
             return 2;
         }
-        else
-        {
-            return 1;
-        }
+
+        // if (charCode <= 0x00007F) {
+        //     return 1;
+        // } else if (charCode <= 0x0007FF) {
+        //     return 2;
+        // } else if (charCode <= 0x00FFFF) {
+        //     return 3;
+        // } else {
+        //     return 4;
+        // }
     }
 };
 

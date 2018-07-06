@@ -14,6 +14,7 @@
         <div class="panel panel-default content-main">
 
             <form id="uploadForm" method="post" enctype="multipart/form-data">
+                <input id="csrf" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <input type="file" name="file"/>
                 <button type="submit" class="btn btn-primary">업로드</button>
             </form>
@@ -51,7 +52,7 @@
                     <textarea name="textarea" id="textarea" rows="5"
                               class="form-control"></textarea>
                     <br/>
-                    <span><em>2000</em> / 2000</span>
+                    <span><em>0</em> / 2000</span>
                 </div>
                 <br/>
                 <button type="submit" id="btn-submit" class="btn btn-success clearfix pull-right">보내기</button>

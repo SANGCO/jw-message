@@ -13,10 +13,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,8 +22,8 @@ import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
-
 
 @RestController
 @RequestMapping("/api/companies")
@@ -49,6 +46,7 @@ public class ApiCompanyController {
 // TODO uploadCompanies 메소드 만들기
     @RequestMapping(value = "/upload", method = POST)
     public ResponseEntity uploadCompanies(@RequestParam("file") MultipartFile uploadfile, Principal principal) throws IOException, InvalidFormatException {
+        System.out.println("여기들어오는지");
         List<Company> companies = excelReadComponent.readExcelToList(uploadfile, (row -> Company.ofRow(row)));
 //		log.debug("uploadCompanies() - Principal - getName() : {}", principal.getName());
 //		TODO 일단 업로드 파일 읽어서 뿌리고 메일 보내기

@@ -43,6 +43,7 @@ public class AccountController {
         if (bindingResult.hasErrors()) {
             return "account/join";
         }
+        accountService.createAccount(create);
         return "redirect:/";
     }
 
