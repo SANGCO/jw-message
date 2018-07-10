@@ -33,28 +33,14 @@ function excel_upload(e) {
             console.log("SUCCESS : ", companyData);
             $("#btnSubmit").prop("disabled", false);
 
-            var wrapper = {};
-            wrapper["data"] = companyData.map(x => Object.values(x));;
+            var dataSet = companyData.map(x => Object.values(x));
 
             companyTable = $('#companyTable').DataTable({
-                data: companyData,
-                columnDefs: [
-                    {
-                        'targets': 0,
-                        'checkboxes': {
-                            'selectRow': true
-                        }
-                    }
-                ],
-                select: {
-                    style: 'multi',
+                "data": companyData,
+                "select": {
+                    style: 'multi'
                 },
-                order: [[1, 'asc']],
-                columns: [
-                    {
-                        data: null,
-                        orderable: false
-                    },
+                "columns": [
                     {data: "companyName"},
                     {data: "type"},
                     {data: "personIncharge"},
@@ -186,3 +172,17 @@ $("textarea").on("keyup", function(){
         $("#btn-submit").prop("disabled", false);
     }
 });
+
+// $("#selectForm  button[type=submit]").click(function(event){
+//     select_all_none(event);
+// });
+
+function select_all() {
+    console.log("select all");
+    $("#companyTable tbody tr").attr("class", "selected");
+}
+
+function select_none() {
+    console.log("select none");
+    $("#companyTable tbody tr").attr("class", "selected");
+}
