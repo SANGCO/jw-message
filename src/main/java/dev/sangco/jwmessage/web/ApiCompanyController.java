@@ -1,5 +1,6 @@
 package dev.sangco.jwmessage.web;
 
+import dev.sangco.jwmessage.common.ErrorResponse;
 import dev.sangco.jwmessage.domain.*;
 import dev.sangco.jwmessage.service.AccountService;
 import dev.sangco.jwmessage.service.CompanyService;
@@ -9,14 +10,17 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
@@ -42,6 +46,9 @@ public class ApiCompanyController {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private MessageSourceAccessor msa;
+
 
 // TODO uploadCompanies 메소드 만들기
     @RequestMapping(value = "/upload", method = POST)
@@ -66,32 +73,25 @@ public class ApiCompanyController {
         return new ResponseEntity(companyDtos, HttpStatus.OK);
     }
 
-// TODO .testmode_yn("Y").build().ofEntity(); 이부분이 MessageDto.Create 통해서 들어와야 한다.
     @RequestMapping(value = "/send", method = POST)
-    public ResponseEntity sendMessage(@RequestBody MessageDto.Create messageDto, Principal principal) {
-        log.debug("어떤 값이 들어왔는고~~~~ " + messageDto.toString());
+    public ResponseEntity sendMessage(@RequestBody @Valid Message message, Principal principal, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity(createErrorResponse(bindingResult), HttpStatus.BAD_REQUEST);
+        }
+        log.debug("Message : " + message.toString());
         Account account = accountService.findByAccId(principal.getName());
-        log.debug("getAligoId() : " + account.getAligoId());
-        log.debug("getAligoKey() : " + account.getAligoKey());
         RestTemplate restTemplate = new RestTemplate();
-// TODO [STEP 01] 원격에서 빌드시 테스트를 돌리는데 그때 테스트 모드로 돌릴 수 있게 만들어야 한다.
         HttpEntity<MultiValueMap<String, Object>> request =
                 Message.builder()
                         .key(account.getAligoKey())
                         .userid(account.getAligoId())
                         .sender(account.getPhoneNumb())
-                        .receiver(messageDto.getContactNumb())
-                        .msg(messageDto.getMsg())
-                        .title(messageDto.getTitle())
-                        .testmode_yn("Y").build().ofEntity();
-//                        .build().ofEntity();
-
+                        .receiver(message.getReceiver())
+                        .msg(message.getMsg())
+                        .title(message.getTitle())
+                        .testmode_yn(message.getTestmode_yn()).build().ofEntity();
         ResponseEntity<String> response =
         restTemplate.postForEntity("https://apis.aligo.in/send/", request, String.class);
-        System.out.println("Response StatusCode : " + response.getStatusCode().toString());
-        System.out.println("Response Body : " + response.getBody());
-        // TODO JSON으로 떨구기
-
         return new ResponseEntity(response.getBody(), HttpStatus.OK);
     }
 
@@ -109,6 +109,21 @@ public class ApiCompanyController {
 //
 //		return new ResponseEntity(HttpStatus.OK);
 //	}
+
+    // TODO api들에서 다 쓸 수 있게 외부로 빼자.
+    private ErrorResponse createErrorResponse(BindingResult bindingResult) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setMessage(msa.getMessage("badReq.c"));
+        errorResponse.setCode(msa.getMessage("badReq.m"));
+        errorResponse.setFieldErrors(bindingResult.getFieldErrors().stream().map(error -> {
+            ErrorResponse.FieldError FieldError = new ErrorResponse.FieldError();
+            FieldError.setField(error.getField());
+            FieldError.setMessage(error.getDefaultMessage());
+            return FieldError;
+        }).collect(Collectors.toList()));
+
+        return errorResponse;
+    }
 }
 
 

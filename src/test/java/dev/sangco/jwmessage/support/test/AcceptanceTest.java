@@ -12,8 +12,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.test.annotation.Commit;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -28,6 +32,9 @@ public abstract class AcceptanceTest {
 
     @Autowired
     protected AccountService accountService;
+
+    @Autowired
+    private MessageSourceAccessor msa;
 
     @LocalServerPort
     protected int port;
@@ -44,7 +51,8 @@ public abstract class AcceptanceTest {
 
     @After
     public void cleanUp() {
-        accountRepository.deleteAll();
+        accountService.deleteByAccId("loginAccount");
+        accountService.deleteByAccId("anotherAccount");
     }
 
     protected TestRestTemplate basicAuthTemplate(Account paramAccount) {
@@ -54,22 +62,23 @@ public abstract class AcceptanceTest {
     // TODO (처리요망) 여기도 키 값과 아이디가 들어간다.
     protected AccountDto.Create getLoginAccount() {
         return new AccountDto.Create("loginAccount", "123456", "123456", "로그인어카운트",
-                "01047579824", "jwpro", "xemrqh2zv51u88p3o3b22z6yjmn8tv5x");
+                msa.getMessage("phoneNumb"), msa.getMessage("aligoId"), msa.getMessage("aligoKey"));
     }
 
     protected AccountDto.Create getAnotherAccount() {
         return new AccountDto.Create("anotherAccount", "123456", "123456", "어나더어카운트",
-                "01047579824", "jwpro", "xemrqh2zv51u88p3o3b22z6yjmn8tv5x");
+                msa.getMessage("phoneNumb"), msa.getMessage("aligoId"), msa.getMessage("aligoKey"));
     }
+
     protected AccountDto.Create getAccountDtoCreate() {
         return new AccountDto.Create(
                 "test1213", "123456", "123456", "테스트",
-                "01047579824", "jwpro", "xemrqh2zv51u88p3o3b22z6yjmn8tv5x");
+                msa.getMessage("phoneNumb"), msa.getMessage("aligoId"), msa.getMessage("aligoKey"));
     }
 
     protected AccountDto.Update getAccountDtoUpdate() {
         return new AccountDto.Update(
                 "123456", "123456", "업데이트테스트",
-                "01012345678", "jwpro", "xemrqh2zv51u88p3o3b22z6yjmn8tv5x");
+                msa.getMessage("phoneNumb"), msa.getMessage("aligoId"), msa.getMessage("aligoKey"));
     }
 }

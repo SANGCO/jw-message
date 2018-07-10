@@ -1,7 +1,6 @@
 // TODO STEP1 변수명 메소드명 정리하기
 
 var companyTable;
-var rows_selected;
 var contactNumb;
 
 // TODO CSRF 적용
@@ -28,30 +27,32 @@ function excel_upload(e) {
         processData: false,
         contentType: false,
         cache: false,
-        success: function (data) {
+        success: function (companyData) {
 
-            $("#result").text(data);
-            console.log("SUCCESS : ", data);
+            $("#result").text(companyData);
+            console.log("SUCCESS : ", companyData);
             $("#btnSubmit").prop("disabled", false);
 
+            var wrapper = {};
+            wrapper["data"] = companyData.map(x => Object.values(x));;
 
             companyTable = $('#companyTable').DataTable({
-
+                data: companyData,
+                columnDefs: [
+                    {
+                        'targets': 0,
+                        'checkboxes': {
+                            'selectRow': true
+                        }
+                    }
+                ],
                 select: {
-                    style: 'multi'
+                    style: 'multi',
                 },
-
                 order: [[1, 'asc']],
-
-                destroy: true,
-
-                data: data,
-
                 columns: [
                     {
                         data: null,
-                        defaultContent: '',
-                        className: 'select-checkbox',
                         orderable: false
                     },
                     {data: "companyName"},
@@ -59,26 +60,12 @@ function excel_upload(e) {
                     {data: "personIncharge"},
                     {data: "position"},
                     {data: "contactNumb"}
-                ],
-
-                columnDefs: [
-                    {
-                        targets: 0,
-                        checkboxes: {
-                            selectRow: true
-                        }
-                    }
                 ]
-
             });
-
-            rows_selected = companyTable.column(0).checkboxes.selected().data();
-
         },
         error: function (e) {
 
-            $("#result").text(e.responseText);
-            console.log("ERROR : ", e);
+            $("#result").text(e.responseJSON);
             $("#btnSubmit").prop("disabled", false);
 
         }
@@ -94,8 +81,12 @@ function send_message_ajax_submit(e) {
     console.log("send_message_ajax_submit() 들어왔음")
     e.preventDefault();
 
-    console.log(rows_selected);
+    var rows_selected = companyTable.column(0).checkboxes.selected();
     contactNumb = [];
+
+    // if(!rows_selected.length) {
+    //     alert("전화번호를 입력하시오!")
+    // }
 
     for (var i = 0; i < rows_selected.length; i++) {
         contactNumb.push(rows_selected[i].contactNumb);
@@ -107,9 +98,10 @@ function send_message_ajax_submit(e) {
     var send = {};
     var token = $("#csrf").val();
 
+    send["receiver"] = contactNumb;
     send["title"] = $("#title").val();
-    send["msg"] = $("#msg").val();
-    send["contactNumb"] = contactNumb;
+    send["msg"] = $("#textarea").val();
+    send["testmode_yn"] = $("input[type='radio'][name='sendMode']:checked").val();
 
     $("#btn-submit").prop("disabled", false);
 
@@ -142,11 +134,8 @@ function send_message_ajax_submit(e) {
             $("#response-data").append(JSON.stringify(data));
         },
         error: function (e) {
-
-            $("#result").text(e.responseText);
-            console.log("ERROR : ", e);
-            $("#btnSubmit").prop("disabled", false);
-
+            $("#response-data").append(JSON.stringify(e.responseJSON.errors));
+            // $("#btnSubmit").prop("disabled", false);
         }
     });
 }
@@ -167,16 +156,6 @@ var calByte = {
     },
 
     charByteSize : function(ch) {
-
-        // if(encodeURIComponent(ch).length > 4)
-        // {
-        //     return 2;
-        // }
-        // else
-        // {
-        //     return 1;
-        // }
-
         if (ch == null || ch.length == 0) {
             return 0;
         }
@@ -192,16 +171,6 @@ var calByte = {
         } else {
             return 2;
         }
-
-        // if (charCode <= 0x00007F) {
-        //     return 1;
-        // } else if (charCode <= 0x0007FF) {
-        //     return 2;
-        // } else if (charCode <= 0x00FFFF) {
-        //     return 3;
-        // } else {
-        //     return 4;
-        // }
     }
 };
 

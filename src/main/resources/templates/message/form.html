@@ -41,8 +41,21 @@
             <br/>
             <br/>
             <br/>
+            <h4 class="mb-3">Mode</h4>
+
+            <div class="d-block my-3" id="sendModeRadio">
+                <div class="custom-control custom-radio">
+                    <input id="testMode" name="sendMode" value="Y" type="radio" class="custom-control-input" checked required>
+                    <label class="custom-control-label" for="testMode">Test Mode</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input id="realMode" name="sendMode" value="N" type="radio" class="custom-control-input" required>
+                    <label class="custom-control-label" for="realMode">Real Mode</label>
+                </div>
+            </div>
+
             <form id="send-message">
-                <!-- TODO 제목은 몇글자로 제한? -->
+                <!-- TODO 제목은 몇글자로 제한? 44 -->
                 <div class="form-group">
                     <label for="title">제목</label> <input type="text"
                                                          class="form-control" id="title" name="title" placeholder="제목"/>

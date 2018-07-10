@@ -1,6 +1,6 @@
 package dev.sangco.jwmessage.web;
 
-import dev.sangco.jwmessage.domain.MessageDto;
+import dev.sangco.jwmessage.domain.Message;
 import dev.sangco.jwmessage.support.excel.ExcelReadComponent;
 import dev.sangco.jwmessage.support.http.HtmlFormDataBuilder;
 import dev.sangco.jwmessage.support.test.AcceptanceTest;
@@ -10,10 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.util.MultiValueMap;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -47,8 +45,8 @@ public class ApiCompanyControllerTest extends AcceptanceTest {
     @Test
     public void sendMessage_Test() {
         ResponseEntity<String> response =
-        basicAuthTemplate(defaultLoginAccount).postForEntity("/api/companies/send", new MessageDto.Create(
-                "테스트문자", "테스트문자 본문", "01047579824,01025688681,01020934806"), String.class);
+        basicAuthTemplate(defaultLoginAccount).postForEntity("/api/companies/send", Message.builder()
+                .title("테스트문자").msg("테스트문자 본문").receiver("01047579824,01025688681,01020934806").build(), String.class);
         log.debug("sendMessage_Test() - getBody() : " + response.getBody());
         log.debug("sendMessage_Test() - getHeaders() : " + response.getHeaders());
         assertThat(response.getStatusCode(), is(HttpStatus.OK));

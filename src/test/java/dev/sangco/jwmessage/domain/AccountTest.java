@@ -51,7 +51,7 @@ public class AccountTest {
         account.setCompany(companies);
         accountRepository.save(account);
 
-        Account savedAccount = accountRepository.findAll().get(0);
+        Account savedAccount = accountRepository.findByAccId("test").get();
         savedAccount.getCompany().stream().forEach(c -> {
             System.out.println(c);
         });
