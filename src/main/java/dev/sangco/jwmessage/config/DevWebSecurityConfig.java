@@ -46,9 +46,15 @@ public class DevWebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.httpBasic()
                 .and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers(GET, "/api/accounts/**").hasRole("USER")
-                .antMatchers(PUT, "/api/accounts/**").hasRole("USER")
-                .antMatchers(DELETE, "/api/accounts/**").hasRole("USER")
+                .antMatchers(GET, "/api/companies/**").hasRole("ADMIN")
+//                .antMatchers(PUT, "/api/companies/**").hasRole("ADMIN")
+//                .antMatchers(DELETE, "/api/companies/**").hasRole("ADMIN")
+                .antMatchers(GET, "/companies/**").hasRole("ADMIN")
+//                .antMatchers(PUT, "/companies/**").hasRole("ADMIN")
+//                .antMatchers(DELETE, "/companies/**").hasRole("ADMIN")
+                .antMatchers(GET, "/message/**").hasRole("ADMIN")
+                .antMatchers(GET, "/storage/**").hasRole("ADMIN")
+
                 .anyRequest().permitAll()
 
                 .and().formLogin().loginPage("/accounts/login").failureUrl("/accounts/login?error=true")

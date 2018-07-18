@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -37,14 +38,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Qualifier("dataSource")
     @Autowired
-    DataSource dataSource;
+    private DataSource dataSource;
 
-    public static final String REMEMBER_ME_KEY = "jungwon";
+    @Autowired
+    private MessageSourceAccessor msa;
 
     @Bean
     public PersistentTokenBasedRememberMeServices persistentTokenBasedRememberMeServices(){
         PersistentTokenBasedRememberMeServices persistentTokenBasedRememberMeServices
-                = new PersistentTokenBasedRememberMeServices(REMEMBER_ME_KEY, userDetailsService, jdbcTokenRepository());
+                = new PersistentTokenBasedRememberMeServices(msa.getMessage("REMEMBER_ME_KEY"), userDetailsService, jdbcTokenRepository());
         return persistentTokenBasedRememberMeServices;
     }
 
@@ -66,10 +68,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.httpBasic()
                 .and().authorizeRequests()
-                .antMatchers(GET, "/api/accounts/**").hasRole("USER")
-                .antMatchers(PUT, "/api/accounts/**").hasRole("USER")
-                .antMatchers(DELETE, "/api/accounts/**").hasRole("USER")
-//                .antMatchers(HttpMethod.GET, "/admin/test/**").hasRole("ADMIN")
+                // TODO POST는 어떻게?
+                .antMatchers(GET, "/api/companies/**").hasRole("ADMIN")
+//                .antMatchers(PUT, "/api/companies/**").hasRole("ADMIN")
+//                .antMatchers(DELETE, "/api/companies/**").hasRole("ADMIN")
+                .antMatchers(GET, "/companies/**").hasRole("ADMIN")
+//                .antMatchers(PUT, "/companies/**").hasRole("ADMIN")
+//                .antMatchers(DELETE, "/companies/**").hasRole("ADMIN")
+                .antMatchers(GET, "/message/**").hasRole("ADMIN")
+                .antMatchers(GET, "/storage/**").hasRole("ADMIN")
                 .anyRequest().permitAll()
 
                 .and().formLogin().loginPage("/accounts/login").failureUrl("/accounts/login?error=true")
@@ -79,7 +86,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and().logout().logoutUrl("/accounts/logout").logoutSuccessUrl("/").invalidateHttpSession(true)
                 .and().exceptionHandling().accessDeniedPage("/accounts/accessDenied")
-                .and().rememberMe().key(REMEMBER_ME_KEY).rememberMeServices(persistentTokenBasedRememberMeServices());
+                .and().rememberMe().key(msa.getMessage("REMEMBER_ME_KEY")).rememberMeServices(persistentTokenBasedRememberMeServices());
                 // TODO 실서버에 리멤버미 관련 테이블 추가
 
         // TODO 중복 로그인 처리

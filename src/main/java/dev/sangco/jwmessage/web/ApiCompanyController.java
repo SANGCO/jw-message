@@ -110,7 +110,7 @@ public class ApiCompanyController {
 //		return new ResponseEntity(HttpStatus.OK);
 //	}
 
-    // TODO api들에서 다 쓸 수 있게 외부로 빼자.
+    // TODO api들에서 다 쓸 수 있게 외부로 빼자. ErrorResponse로 보내버릴까?
     private ErrorResponse createErrorResponse(BindingResult bindingResult) {
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setMessage(msa.getMessage("badReq.c"));

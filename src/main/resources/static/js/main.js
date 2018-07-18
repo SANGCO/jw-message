@@ -9,7 +9,7 @@ $("#uploadForm button[type=submit]").click(function(event){
 });
 
 function excel_upload(e) {
-    console.log('test upload 클릭클릭')
+    console.log('excel_upload()')
     e.preventDefault();
 
     var form = $("#uploadForm")[0];
@@ -33,7 +33,7 @@ function excel_upload(e) {
             console.log("SUCCESS : ", companyData);
             $("#btnSubmit").prop("disabled", false);
 
-            var dataSet = companyData.map(x => Object.values(x));
+            // var dataSet = companyData.map(x => Object.values(x));
 
             companyTable = $('#companyTable').DataTable({
                 "data": companyData,
@@ -64,9 +64,11 @@ $("#send-message button[type=submit]").click(function (event) {
 });
 
 function send_message_ajax_submit(e) {
-    console.log("send_message_ajax_submit() 들어왔음")
+    console.log("send_message_ajax_submit()")
     e.preventDefault();
 
+    // companyTable.column(4).data();
+    // companyTable.rows( { selected: true } ).data();
     var rows_selected = companyTable.column(0).checkboxes.selected();
     contactNumb = [];
 
