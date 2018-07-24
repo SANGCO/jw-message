@@ -42,11 +42,13 @@ public class ApiCompanyControllerTest extends AcceptanceTest {
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 
+    // 원격 IP를 알리고에 등록
     @Test
     public void sendMessage_Test() {
         ResponseEntity<String> response =
         basicAuthTemplate(defaultLoginAccount).postForEntity("/api/companies/send", Message.builder()
-                .title("테스트문자").msg("테스트문자 본문").receiver("01047579824,01025688681,01020934806").build(), String.class);
+                .title("테스트문자").msg("테스트문자 본문").receiver("01047579824,01025688681,01020934806")
+                .testmode_yn("Y").build(), String.class);
         log.debug("sendMessage_Test() - getBody() : " + response.getBody());
         log.debug("sendMessage_Test() - getHeaders() : " + response.getHeaders());
         assertThat(response.getStatusCode(), is(HttpStatus.OK));

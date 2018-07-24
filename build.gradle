@@ -13,11 +13,6 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-//apply plugin: 'war'
-//war {
-//	baseName = 'jwMessage'
-//	version = '0.0.1-SNAPSHOT'
-//}
 
 group = 'dev.sangco'
 version = '0.0.1-SNAPSHOT'

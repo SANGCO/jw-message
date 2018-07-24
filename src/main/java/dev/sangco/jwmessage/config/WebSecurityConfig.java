@@ -15,33 +15,28 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.sql.DataSource;
 
-import static org.springframework.http.HttpMethod.*;
+import static org.springframework.http.HttpMethod.GET;
 
 @Configuration
 @EnableWebSecurity
-@Profile("default")
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    public PasswordEncoder passwordEncoder;
 
     @Qualifier("userDetailsServiceImpl")
     @Autowired
-    private UserDetailsService userDetailsService;
+    public UserDetailsService userDetailsService;
 
     @Qualifier("dataSource")
     @Autowired
-    private DataSource dataSource;
+    public DataSource dataSource;
 
     @Autowired
-    private MessageSourceAccessor msa;
+    public MessageSourceAccessor msa;
 
     @Bean
     public PersistentTokenBasedRememberMeServices persistentTokenBasedRememberMeServices(){
@@ -63,40 +58,58 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Configuration
+    @Profile({"dev"})
+    static class DevWebSecurityConfig extends WebSecurityConfig {
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
 
-        http.httpBasic()
-                .and().authorizeRequests()
-                // TODO POST는 어떻게?
-                .antMatchers(GET, "/api/companies/**").hasRole("ADMIN")
+            http.httpBasic()
+                    .and().csrf().disable()
+                    .authorizeRequests()
+                    .antMatchers(GET, "/api/companies/**").hasRole("ADMIN")
 //                .antMatchers(PUT, "/api/companies/**").hasRole("ADMIN")
 //                .antMatchers(DELETE, "/api/companies/**").hasRole("ADMIN")
-                .antMatchers(GET, "/companies/**").hasRole("ADMIN")
+                    .antMatchers(GET, "/companies/**").hasRole("ADMIN")
 //                .antMatchers(PUT, "/companies/**").hasRole("ADMIN")
 //                .antMatchers(DELETE, "/companies/**").hasRole("ADMIN")
-                .antMatchers(GET, "/message/**").hasRole("ADMIN")
-                .antMatchers(GET, "/storage/**").hasRole("ADMIN")
-                .anyRequest().permitAll()
+                    .antMatchers(GET, "/message/**").hasRole("ADMIN")
+                    .antMatchers(GET, "/storage/**").hasRole("ADMIN")
+                    .anyRequest().permitAll();
+        }
+    }
 
-                .and().formLogin().loginPage("/accounts/login").failureUrl("/accounts/login?error=true")
-                .defaultSuccessUrl("/")
-                .usernameParameter("accId")
-                .passwordParameter("password")
+    @Configuration
+    @Profile({"default"})
+    static class ProdWebSecurityConfig extends WebSecurityConfig {
 
-                .and().logout().logoutUrl("/accounts/logout").logoutSuccessUrl("/").invalidateHttpSession(true)
-                .and().exceptionHandling().accessDeniedPage("/accounts/accessDenied")
-                .and().rememberMe().key(msa.getMessage("REMEMBER_ME_KEY")).rememberMeServices(persistentTokenBasedRememberMeServices());
-                // TODO 실서버에 리멤버미 관련 테이블 추가
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
 
-        // TODO 중복 로그인 처리
-//        http.sessionManagement()
-//                .invalidSessionUrl("/spring/error?error_code=1")
-//                .sessionAuthenticationErrorUrl("/spring/error?error_code=2")
-//                .maximumSessions(1)
-//                .expiredUrl("/spring/error?error_code=3")
-//                .maxSessionsPreventsLogin(true)
-//                .sessionRegistry(sessionRegistry());
+            http.httpBasic()
+                    .and().authorizeRequests()
+                    // TODO POST는 어떻게?
+                    .antMatchers(GET, "/api/companies/**").hasRole("ADMIN")
+//                .antMatchers(PUT, "/api/companies/**").hasRole("ADMIN")
+//                .antMatchers(DELETE, "/api/companies/**").hasRole("ADMIN")
+                    .antMatchers(GET, "/companies/**").hasRole("ADMIN")
+//                .antMatchers(PUT, "/companies/**").hasRole("ADMIN")
+//                .antMatchers(DELETE, "/companies/**").hasRole("ADMIN")
+                    .antMatchers(GET, "/message/**").hasRole("ADMIN")
+                    .antMatchers(GET, "/storage/**").hasRole("ADMIN")
+                    .anyRequest().permitAll()
+
+                    .and().formLogin().loginPage("/accounts/login").failureUrl("/accounts/login?error=true")
+                    .defaultSuccessUrl("/")
+                    .usernameParameter("accId")
+                    .passwordParameter("password")
+
+                    .and().logout().logoutUrl("/accounts/logout").logoutSuccessUrl("/").invalidateHttpSession(true)
+                    .and().exceptionHandling().accessDeniedPage("/accounts/accessDenied")
+                    .and().rememberMe().key(msa.getMessage("REMEMBER_ME_KEY")).rememberMeServices(persistentTokenBasedRememberMeServices());
+            // TODO 실서버에 리멤버미 관련 테이블 추가
+            // TODO 중복 로그인 처리
+        }
     }
 
     @Override
