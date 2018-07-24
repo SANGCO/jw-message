@@ -80,7 +80,6 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Configuration
-    @Profile({"default"})
     static class ProdWebSecurityConfig extends WebSecurityConfig {
 
         @Override
