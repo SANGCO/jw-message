@@ -58,28 +58,16 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 
-    @Configuration
-    @Profile({"dev"})
-    static class DevWebSecurityConfig extends WebSecurityConfig {
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
 
-            http.httpBasic()
-                    .and().csrf().disable()
-                    .authorizeRequests()
-                    .antMatchers(GET, "/api/companies/**").hasRole("ADMIN")
-//                .antMatchers(PUT, "/api/companies/**").hasRole("ADMIN")
-//                .antMatchers(DELETE, "/api/companies/**").hasRole("ADMIN")
-                    .antMatchers(GET, "/companies/**").hasRole("ADMIN")
-//                .antMatchers(PUT, "/companies/**").hasRole("ADMIN")
-//                .antMatchers(DELETE, "/companies/**").hasRole("ADMIN")
-                    .antMatchers(GET, "/message/**").hasRole("ADMIN")
-                    .antMatchers(GET, "/storage/**").hasRole("ADMIN")
-                    .anyRequest().permitAll();
-        }
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web
+                .ignoring()
+                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
     }
 
     @Configuration
+    @Profile({"dev", "prod"})
     static class ProdWebSecurityConfig extends WebSecurityConfig {
 
         @Override
@@ -111,10 +99,24 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         }
     }
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web
-                .ignoring()
-                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
+    @Configuration
+    @Profile("test")
+    static class DevWebSecurityConfig extends WebSecurityConfig {
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+
+            http.httpBasic()
+                    .and().csrf().disable()
+                    .authorizeRequests()
+                    .antMatchers(GET, "/api/companies/**").hasRole("ADMIN")
+//                .antMatchers(PUT, "/api/companies/**").hasRole("ADMIN")
+//                .antMatchers(DELETE, "/api/companies/**").hasRole("ADMIN")
+                    .antMatchers(GET, "/companies/**").hasRole("ADMIN")
+//                .antMatchers(PUT, "/companies/**").hasRole("ADMIN")
+//                .antMatchers(DELETE, "/companies/**").hasRole("ADMIN")
+                    .antMatchers(GET, "/message/**").hasRole("ADMIN")
+                    .antMatchers(GET, "/storage/**").hasRole("ADMIN")
+                    .anyRequest().permitAll();
+        }
     }
 }
