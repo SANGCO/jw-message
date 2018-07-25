@@ -42,7 +42,6 @@ public class ApiCompanyControllerTest extends AcceptanceTest {
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 
-    // 원격 IP를 알리고에 등록
     @Test
     public void sendMessage_Test() {
         ResponseEntity<String> response =
