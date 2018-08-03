@@ -21,24 +21,24 @@ public class ViewController {
     @RequestMapping(value = "/message/form", method = GET)
     public String messageForm(Model model) {
         model.addAttribute("view", "messageForm");
-        return "/message/form";
+        return "message/form";
     }
 
     @RequestMapping(value = "/message/list", method = GET)
     public String messageList(Model model) {
         model.addAttribute("view", "messageList");
-        return "/message/list";
+        return "message/list";
     }
 
     @RequestMapping(value = "/message/record", method = GET)
     public String messageRecord(Model model) {
         model.addAttribute("view", "messageRecord");
-        return "/message/record";
+        return "message/record";
     }
 
     @RequestMapping(value = "/storage/list", method = GET)
     public String storageList(Model model) {
         model.addAttribute("view", "storageList");
-        return "/storage/list";
+        return "storage/list";
     }
 }
