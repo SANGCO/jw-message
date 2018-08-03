@@ -14,8 +14,8 @@ import java.util.List;
 @Entity
 public class Account extends BaseTimeEntity {
 
-    @Column(unique = true, nullable = false, length = 20)
     @Id
+    @Column(unique = true, nullable = false, length = 20)
     private String accId;
 
     @Column(nullable = false)
@@ -35,10 +35,6 @@ public class Account extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_account_company"))
-    private List<Company> company;
 
     @Builder
     public Account(String accId, String password, String name, String phoneNumb, String aligoId, String aligoKey, Role role) {

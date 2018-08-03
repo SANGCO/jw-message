@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class UserDetailsImpl extends User {
-    public static final Logger log =  LoggerFactory.getLogger(UserDetailsImpl.class);
+    public static final Logger log = LoggerFactory.getLogger(UserDetailsImpl.class);
 
     public UserDetailsImpl(Account account) {
         super(account.getAccId(), account.getPassword(), authorities(account));

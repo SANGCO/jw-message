@@ -1,5 +1,6 @@
 package dev.sangco.jwmessage.web;
 
+import dev.sangco.jwmessage.common.AccountDuplicatedException;
 import dev.sangco.jwmessage.common.UnAuthenticationException;
 import dev.sangco.jwmessage.domain.AccountDto;
 import dev.sangco.jwmessage.service.AccountService;
@@ -14,11 +15,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
-
 import java.security.Principal;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @Controller
 @RequestMapping("/accounts")
@@ -43,29 +44,26 @@ public class AccountController {
         if (bindingResult.hasErrors()) {
             return "account/join";
         }
-        accountService.createAccount(create);
+        // TODO 어떻게 처리해야할까?
+        try {
+            accountService.createAccount(create);
+        } catch (AccountDuplicatedException e) {
+            return e.getMessage();
+        }
         return "redirect:/";
     }
 
-    //  For Spring Security
     @RequestMapping(value = "/login", method = GET)
     public String login(Model model) {
         model.addAttribute("view", "login");
         return "account/login";
     }
 
-//    @RequestMapping(value = "/logout", method = GET)
-//    public String logout(Model model) {
-//        model.addAttribute("view", "index");
-//        return "/account/logout";
-//    }
-
     @RequestMapping(value = "/accessDenied", method = GET)
     public String accessDenied(Model model) {
         model.addAttribute("view", "accessDenied");
         return "account/accessDenied";
     }
-
 
     @RequestMapping(value = "/update", method = GET)
     public String updateForm(Model model, Principal principal) {
@@ -74,8 +72,7 @@ public class AccountController {
         return "account/update";
     }
 
-
-    @RequestMapping(value = "/join/{accId}", method = POST)
+    @RequestMapping(value = "/update/{accId}", method = PUT)
     public String update(@PathVariable String accId, @Valid AccountDto.Update update, Principal principal, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "account/update";

@@ -5,6 +5,9 @@ import lombok.*;
 import org.apache.poi.ss.usermodel.Row;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @EqualsAndHashCode(of = "companyName", callSuper = false)
 @ToString
@@ -15,9 +18,6 @@ import javax.persistence.*;
 public class Company extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
     @Column(unique = true, nullable = false)
     private String companyName;
 
@@ -32,6 +32,18 @@ public class Company extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String contactNumb;
+
+//    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//    @JoinColumn(foreignKey = @ForeignKey(name = "fk_company_account"))
+//    private Set<Account> accounts;
+//
+//    public void setAccount(Account account) {
+//        if (this.accounts == null) {
+//            this.accounts = new HashSet<>();
+//            this.accounts.add(account);
+//        }
+//        this.accounts.add(account);
+//    }
 
     @Builder
     public Company(String companyName, String type, String personIncharge, String position, String contactNumb) {
@@ -59,4 +71,3 @@ public class Company extends BaseTimeEntity {
                 .contactNumb(row.getCell(10).getStringCellValue()).build();
    }
 }
-

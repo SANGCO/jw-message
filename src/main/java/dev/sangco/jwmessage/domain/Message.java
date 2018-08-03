@@ -7,7 +7,7 @@ import org.springframework.util.MultiValueMap;
 
 import javax.validation.constraints.NotBlank;
 
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor
 @Data
 public class Message {
 

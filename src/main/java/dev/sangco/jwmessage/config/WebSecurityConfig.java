@@ -67,7 +67,7 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Configuration
-    @Profile({"dev", "prod"})
+    @Profile({"dev", "prod", "test_csrf"})
     static class ProdWebSecurityConfig extends WebSecurityConfig {
 
         @Override
@@ -94,7 +94,6 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .and().logout().logoutUrl("/accounts/logout").logoutSuccessUrl("/").invalidateHttpSession(true)
                     .and().exceptionHandling().accessDeniedPage("/accounts/accessDenied")
                     .and().rememberMe().key(msa.getMessage("REMEMBER_ME_KEY")).rememberMeServices(persistentTokenBasedRememberMeServices());
-            // TODO 실서버에 리멤버미 관련 테이블 추가
             // TODO 중복 로그인 처리
         }
     }

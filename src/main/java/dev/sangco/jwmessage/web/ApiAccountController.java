@@ -1,7 +1,6 @@
 package dev.sangco.jwmessage.web;
 
 import dev.sangco.jwmessage.common.ErrorResponse;
-import dev.sangco.jwmessage.common.UnAuthenticationException;
 import dev.sangco.jwmessage.domain.Account;
 import dev.sangco.jwmessage.domain.AccountDto;
 import dev.sangco.jwmessage.service.AccountService;
@@ -17,20 +16,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
-import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -66,19 +59,5 @@ public class ApiAccountController {
     public ResponseEntity deleteAccount(@PathVariable String accId) {
         accountService.deleteByAccId(accId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
-    }
-
-    private ErrorResponse createErrorResponse(BindingResult bindingResult) {
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setMessage(msa.getMessage("badReq.c"));
-        errorResponse.setCode(msa.getMessage("badReq.m"));
-        errorResponse.setFieldErrors(bindingResult.getFieldErrors().stream().map(error -> {
-            ErrorResponse.FieldError FieldError = new ErrorResponse.FieldError();
-            FieldError.setField(error.getField());
-            FieldError.setMessage(error.getDefaultMessage());
-            return FieldError;
-        }).collect(Collectors.toList()));
-
-        return errorResponse;
     }
 }

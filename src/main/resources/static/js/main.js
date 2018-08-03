@@ -1,39 +1,33 @@
-// TODO STEP1 변수명 메소드명 정리하기
-
 var companyTable;
 var contactNumb;
 
-// TODO CSRF 적용
-$("#uploadForm button[type=submit]").click(function(event){
-    	excel_upload(event);
+$("#companyUpdateForm button[type=submit]").click(function (event) {
+    company_update(event);
 });
 
-function excel_upload(e) {
-    console.log('excel_upload()')
+function company_update(e) {
+    console.log('company_update()')
     e.preventDefault();
 
-    var form = $("#uploadForm")[0];
+    var form = $("#companyUpdateForm")[0];
     var formData = new FormData(form);
     var token = $("#csrf").val();
 
     $.ajax({
         type: "POST",
         enctype: "multipart/form-data",
-        url: "/api/companies/upload",
+        url: "/api/companies/update",
         data: formData,
-        beforeSend : function(xhr){
+        beforeSend: function (xhr) {
             xhr.setRequestHeader("X-CSRF-TOKEN", token);
         },
         processData: false,
         contentType: false,
         cache: false,
         success: function (companyData) {
-
             $("#result").text(companyData);
             console.log("SUCCESS : ", companyData);
             $("#btnSubmit").prop("disabled", false);
-
-            // var dataSet = companyData.map(x => Object.values(x));
 
             companyTable = $('#companyTable').DataTable({
                 "data": companyData,
@@ -50,7 +44,6 @@ function excel_upload(e) {
             });
         },
         error: function (e) {
-
             $("#result").text(e.responseJSON);
             $("#btnSubmit").prop("disabled", false);
 
@@ -58,7 +51,56 @@ function excel_upload(e) {
     });
 };
 
-// TODO 현재 몇글자 적었는지 보여주기(잘 만든거 가져다 쓰자)
+$("#uploadForm button[type=submit]").click(function (event) {
+    excel_upload(event);
+});
+
+function excel_upload(e) {
+    console.log('excel_upload()')
+    e.preventDefault();
+
+    var form = $("#uploadForm")[0];
+    var formData = new FormData(form);
+    var token = $("#csrf").val();
+
+    $.ajax({
+        type: "POST",
+        enctype: "multipart/form-data",
+        url: "/api/companies/upload",
+        data: formData,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("X-CSRF-TOKEN", token);
+        },
+        processData: false,
+        contentType: false,
+        cache: false,
+        success: function (companyData) {
+
+            $("#result").text(companyData);
+            console.log("SUCCESS : ", companyData);
+            $("#btnSubmit").prop("disabled", false);
+
+            companyTable = $('#companyTable').DataTable({
+                "data": companyData,
+                "select": {
+                    style: 'multi'
+                },
+                "columns": [
+                    {data: "companyName"},
+                    {data: "type"},
+                    {data: "personIncharge"},
+                    {data: "position"},
+                    {data: "contactNumb"}
+                ]
+            });
+        },
+        error: function (e) {
+            $("#result").text(e.responseJSON);
+            $("#btnSubmit").prop("disabled", false);
+        }
+    });
+};
+
 $("#send-message button[type=submit]").click(function (event) {
     send_message_ajax_submit(event);
 });
@@ -67,21 +109,16 @@ function send_message_ajax_submit(e) {
     console.log("send_message_ajax_submit()")
     e.preventDefault();
 
-    // companyTable.column(4).data();
-    // companyTable.rows( { selected: true } ).data();
-    var rows_selected = companyTable.column(0).checkboxes.selected();
-    contactNumb = [];
+    var contactNumb;
+    console.log(contactNumb);
 
-    // if(!rows_selected.length) {
-    //     alert("전화번호를 입력하시오!")
-    // }
-
-    for (var i = 0; i < rows_selected.length; i++) {
-        contactNumb.push(rows_selected[i].contactNumb);
+    if ($("input[type='radio'][name='selectMode']:checked").val() == 'Y') {
+        contactNumb = companyTable.columns(4).data().join();
+    } else {
+        contactNumb = companyTable.rows({selected: true}).data().map(v => v.contactNumb).join();
     }
 
-    contactNumb = contactNumb.toString()
-    console.log(contactNumb);
+    // TODO contactNumb이 없으면 어럴트 띄우기
 
     var send = {};
     var token = $("#csrf").val();
@@ -99,51 +136,54 @@ function send_message_ajax_submit(e) {
         url: "/api/companies/send",
         data: JSON.stringify(send),
         dataType: 'json',
-        beforeSend : function(xhr){
+        beforeSend: function (xhr) {
             xhr.setRequestHeader("X-CSRF-TOKEN", token);
         },
         success: function (data) {
-            // TODO result_code가 1, -101 if문으로 분기해서 tr td 뿌리기
-            // bootstrap tables 적용
-            // {
-            //     "result_code": 1
-            //     "message": ""
-            //     "msg_id": 123456789
-            //     "success_cnt": 2
-            //     "error_cnt": 0
-            //     "msg_type": "SMS"
-            // }
-
-            // {
-            //     "result_code": -101
-            //     "message": "인증오류입니다."
-            // }
-
-            $("#response-data").append(JSON.stringify(data));
+            var result = '<tr>'
+                + '<td>' + data.message + '</td>'
+                + '<td>' + data.msg_id + '</td>'
+                + '<td>' + data.success_cnt + '</td>'
+                + '<td>' + data.error_cnt + '</td>'
+                + '<td>' + data.msg_type + '</td>'
+                + '</tr>';
+            $("#response-data").append(result);
+            // $("#btnSubmit").prop("disabled", false);
+            // TODO 막아 드리는게 좋을까?
         },
         error: function (e) {
-            $("#response-data").append(JSON.stringify(e.responseJSON.errors));
+            var result;
+            for (var i = 0; i < e.responseJSON.errors.length; i++) {
+                result += '<tr>'
+                    + '<td>' + e.responseJSON.errors[i].defaultMessage + '</td>'
+                    + '<td></td>'
+                    + '<td></td>'
+                    + '<td></td>'
+                    + '<td></td>'
+                    + '</tr>';
+            }
+            $("#response-data").append(result);
             // $("#btnSubmit").prop("disabled", false);
         }
     });
 }
 
 var calByte = {
-    getByteLength : function(s) {
+    getByteLength: function (s) {
 
         if (s == null || s.length == 0) {
             return 0;
         }
         var size = 0;
 
-        for ( var i = 0; i < s.length; i++) {
+        for (var i = 0; i < s.length; i++) {
             size += this.charByteSize(s.charAt(i));
         }
 
         return size;
     },
 
-    charByteSize : function(ch) {
+    charByteSize: function (ch) {
         if (ch == null || ch.length == 0) {
             return 0;
         }
@@ -162,29 +202,26 @@ var calByte = {
     }
 };
 
-$("textarea").on("keyup", function(){
-
+$('#title').on('keyup', function () {
     var numChar = calByte.getByteLength($(this).val());
-    $("span > em").text(numChar);
-    if(numChar > 2000){
-        $("span > em").addClass("warning");
-        $("#btn-submit").prop("disabled", true);
+    $('#title-length > em').text(numChar);
+    if (numChar > 44) {
+        $('span > em').addClass('warning');
+        $('#btn-submit').prop('disabled', true);
     } else {
-        $("span > em").removeClass("warning");
-        $("#btn-submit").prop("disabled", false);
+        $('span > em').removeClass('warning');
+        $('#btn-submit').prop('disabled', false);
     }
 });
 
-// $("#selectForm  button[type=submit]").click(function(event){
-//     select_all_none(event);
-// });
-
-function select_all() {
-    console.log("select all");
-    $("#companyTable tbody tr").attr("class", "selected");
-}
-
-function select_none() {
-    console.log("select none");
-    $("#companyTable tbody tr").attr("class", "selected");
-}
+$('textarea').on('keyup', function () {
+    var numChar = calByte.getByteLength($(this).val());
+    $('#textarea-length > em').text(numChar);
+    if (numChar > 2000) {
+        $('span > em').addClass('warning');
+        $('#btn-submit').prop('disabled', true);
+    } else {
+        $('span > em').removeClass('warning');
+        $('#btn-submit').prop('disabled', false);
+    }
+});

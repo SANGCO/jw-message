@@ -6,14 +6,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+@Data
 public class AccountDto {
 
-    @ToString
-    @EqualsAndHashCode
-    @Getter
-    @Setter
     @AllArgsConstructor
-    @NoArgsConstructor(access = AccessLevel.PUBLIC)
+    @NoArgsConstructor
+    @Data
     public static class Create {
 
         @NotBlank(message = "아이디를 입력하세요.")
@@ -42,12 +40,9 @@ public class AccountDto {
         private String aligoKey;
     }
 
-    @ToString
-    @EqualsAndHashCode
-    @Getter
-    @Setter
     @AllArgsConstructor
-    @NoArgsConstructor(access = AccessLevel.PUBLIC)
+    @NoArgsConstructor
+    @Data
     public static class Response {
 
         private String accId;
@@ -55,12 +50,9 @@ public class AccountDto {
         private String phoneNumb;
     }
 
-    @ToString
-    @EqualsAndHashCode
-    @Getter
-    @Setter
     @AllArgsConstructor
-    @NoArgsConstructor(access = AccessLevel.PUBLIC)
+    @NoArgsConstructor
+    @Data
     public static class Update {
 
         @NotBlank(message = "패스워드를 입력해주세요.")

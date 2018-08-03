@@ -57,16 +57,20 @@ div.dataTables_wrapper span.select-item {
     }
 }
 
-span{
+span {
     font-size:150%;
     font-weight:bold;
     color:#777;
 }
 
-span em{
+span em {
     font-style:normal;
 }
 
-span em.warning{
+span em.warning {
     color:#f00;
+}
+
+table {
+    text-align: center;
 }

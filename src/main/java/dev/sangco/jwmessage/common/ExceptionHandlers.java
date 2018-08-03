@@ -17,7 +17,7 @@ public class ExceptionHandlers {
     @Autowired
     private MessageSourceAccessor msa;
 
-//  TODO API 방식이 아니라서 화면이 전환 되어야 한다.
+    //  TODO API 방식이 아니라서 화면이 전환 되어야 한다.
     @ExceptionHandler(AccountDuplicatedException.class)
     public ResponseEntity handleAccountDuplicatedException(AccountDuplicatedException e) {
         ErrorResponse errorResponse = new ErrorResponse();
@@ -33,7 +33,6 @@ public class ExceptionHandlers {
         errorResponse.setMessage("[ " + e.getMessage() + " ] " + msa.getMessage("e.accountNotFound.m"));
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
-
 
     @ExceptionHandler(RoleDuplicatedException.class)
     public ResponseEntity handleRoleDuplicatedException(RoleDuplicatedException e) {
@@ -51,7 +50,6 @@ public class ExceptionHandlers {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-
     @ExceptionHandler(UnAuthenticationException.class)
     public ResponseEntity handleUnAuthenticationException(UnAuthenticationException e) {
         ErrorResponse errorResponse = new ErrorResponse();
@@ -59,6 +57,4 @@ public class ExceptionHandlers {
         errorResponse.setMessage("[ " + e.getMessage() + " ] " + msa.getMessage("e.UnAuthentication.m"));
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
-
-    // TODO AccountNotFoundException
 }

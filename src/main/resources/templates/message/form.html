@@ -13,6 +13,18 @@
     <div class="container" id="main">
         <div class="panel panel-default content-main">
 
+            <h4 class="mb-3">거래처 등록</h4>
+
+            <form id="companyUpdateForm" method="post" enctype="multipart/form-data">
+                <input type="file" name="file"/>
+                <button type="submit" class="btn btn-primary">업로드</button>
+            </form>
+            <br/>
+            <br/>
+            <br/>
+
+            <h4 class="mb-3">엑셀로 바로보내기</h4>
+
             <form id="uploadForm" method="post" enctype="multipart/form-data">
                 <input id="csrf" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <input type="file" name="file"/>
@@ -63,19 +75,20 @@
                     <label class="custom-control-label" for="realMode">Real Mode</label>
                 </div>
             </div>
-
+            <br/>
             <form id="send-message">
-                <!-- TODO 제목은 몇글자로 제한? 44 -->
                 <div class="form-group">
-                    <label for="title">제목</label> <input type="text"
-                                                         class="form-control" id="title" name="title" placeholder="제목"/>
+                    <label for="title">제목</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="제목"/>
+                    <br/>
+                    <span id="title-length"><em>0</em> / 44</span>
                 </div>
+                <br/>
                 <div class="form-group">
                     <label for="textarea">내용</label>
-                    <textarea name="textarea" id="textarea" rows="5"
-                              class="form-control"></textarea>
+                    <textarea name="textarea" id="textarea" rows="5" class="form-control"></textarea>
                     <br/>
-                    <span><em>0</em> / 2000</span>
+                    <span id="textarea-length"><em>0</em> / 2000</span>
                 </div>
                 <br/>
                 <button type="submit" id="btn-submit" class="btn btn-success clearfix pull-right">보내기</button>
@@ -86,7 +99,24 @@
             <br/>
             <br/>
 
-            <div id="response-data"></div>
+            <table class="table" id="msg-result">
+                <thead>
+                <tr>
+                    <th scope="col">Message</th>
+                    <th scope="col">Message Id</th>
+                    <th scope="col">Success count</th>
+                    <th scope="col">Error Count</th>
+                    <th scope="col">Message Type</th>
+                </tr>
+                </thead>
+                <tbody id="response-data">
+
+                </tbody>
+            </table>
+
+            <br/>
+            <br/>
+            <br/>
 
         </div>
     </div>
