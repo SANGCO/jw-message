@@ -16,7 +16,7 @@ function company_update(e) {
     $.ajax({
         type: "POST",
         enctype: "multipart/form-data",
-        url: "/api/companies/update",
+        url: "/api/companies/upload",
         data: formData,
         beforeSend: function (xhr) {
             xhr.setRequestHeader("X-CSRF-TOKEN", token);
@@ -42,6 +42,27 @@ function company_update(e) {
                     {data: "contactNumb"}
                 ]
             });
+        },
+        error: function (e) {
+            $("#result").text(e.responseJSON);
+            $("#btnSubmit").prop("disabled", false);
+
+        }
+    });
+
+    $.ajax({
+        type: "POST",
+        enctype: "multipart/form-data",
+        url: "/api/companies/update",
+        data: formData,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("X-CSRF-TOKEN", token);
+        },
+        processData: false,
+        contentType: false,
+        cache: false,
+        success: function (data) {
+
         },
         error: function (e) {
             $("#result").text(e.responseJSON);

@@ -30,7 +30,8 @@ public class Company extends BaseTimeEntity {
     @Column(nullable = false)
     private String position;
 
-    @Column(nullable = false)
+    @Column
+//    @Column(nullable = false)
     private String contactNumb;
 
 //    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

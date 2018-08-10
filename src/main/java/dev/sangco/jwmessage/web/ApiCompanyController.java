@@ -55,15 +55,11 @@ public class ApiCompanyController {
     @Autowired
     private RestTemplate restTemplate;
 
-    // TODO 엑셀 양식 맞춰 수정다시 하기 지금은 위에 라인을 날리고 테스트
-    // 유니크 바이올레이션 위반 하면 catch로 쳐리하자
-
-    // TODO 너무 느린데?
     @RequestMapping(value = "/update", method = POST)
     public ResponseEntity updateCompanies(@RequestParam("file") MultipartFile uploadfile) throws IOException, InvalidFormatException {
         List<Company> companies = getCompanies(uploadfile);
-        companyService.asyncUpdateCompanies(companies);
-        return new ResponseEntity(getResponses(companies), HttpStatus.OK);
+        companyService.updateCompanies(companies);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/upload", method = POST)

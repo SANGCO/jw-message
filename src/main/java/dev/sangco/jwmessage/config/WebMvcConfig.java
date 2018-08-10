@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -46,7 +48,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 	@Bean
 	public RestTemplate restTemplate() {
-		RestTemplate template = new RestTemplate();
+		ClientHttpRequestFactory httpRequestFactory =  new HttpComponentsClientHttpRequestFactory();
+		RestTemplate template = new RestTemplate(httpRequestFactory);
 		List<HttpMessageConverter<?>> converters = template.getMessageConverters();
 		for(HttpMessageConverter<?> converter : converters){
 			if(converter instanceof MappingJackson2HttpMessageConverter){

@@ -1,20 +1,18 @@
 package dev.sangco.jwmessage.service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.Future;
-
+import dev.sangco.jwmessage.common.CompanyNotFoundException;
+import dev.sangco.jwmessage.domain.Company;
+import dev.sangco.jwmessage.domain.CompanyRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import dev.sangco.jwmessage.common.CompanyNotFoundException;
-import dev.sangco.jwmessage.domain.Company;
-import dev.sangco.jwmessage.domain.CompanyRepository;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.Future;
 
 @Transactional
 @Service
@@ -33,8 +31,8 @@ public class CompanyService {
         return companyRepository.save(paramCompany);
     }
 
-    @Async
-    public void asyncUpdateCompanies(List<Company> companies) {
+//    @Async
+    public void updateCompanies(List<Company> companies) {
         for (Company company : companies) {
             save(company);
         }

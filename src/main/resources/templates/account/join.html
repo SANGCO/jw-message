@@ -40,7 +40,7 @@
                     </div>
                     <div class="form-group">
                         <label>연락처</label>
-                        <input type="text" class="form-control" id="phoneNumb" name="phoneNumb" placeholder="연락처를 입력해주세요.">
+                        <input type="text" class="form-control" id="phoneNumb" name="phoneNumb" placeholder="'-'를 빼고 숫자만 입력해주세요.">
                         <div class="text-danger form-text" th:if="${#fields.hasErrors('phoneNumb')}" th:errors="*{phoneNumb}">Name Error</div>
                     </div>
                     <div class="form-group">
