@@ -11,69 +11,172 @@
 
 <div layout:fragment="content" >
     <div class="container" id="main">
-        <div class="panel panel-default content-main">
-
-            <h4 class="mb-3">거래처 등록</h4>
-
-            <form id="companyUpdateForm" method="post" enctype="multipart/form-data">
-                <input type="file" name="file"/>
-                <button type="submit" class="btn btn-primary">업로드</button>
-            </form>
+        <!--<div class="panel panel-default content-main">-->
             <br/>
             <br/>
-            <br/>
-
-            <h4 class="mb-3">엑셀로 바로보내기</h4>
-
-            <form id="uploadForm" method="post" enctype="multipart/form-data">
-                <input id="csrf" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                <input type="file" name="file"/>
-                <button type="submit" class="btn btn-primary">업로드</button>
-            </form>
-            <br/>
-            <br/>
-            <br/>
-            <h4 class="mb-3">Select</h4>
-
-            <div class="d-block my-3" id="selectAllRadio">
-                <div class="custom-control custom-radio">
-                    <input id="selectAll" name="selectMode" value="Y" type="radio" class="custom-control-input" checked required>
-                    <label class="custom-control-label" for="selectAll">전체선택</label>
+            <div class="row">
+                <div class="col">
+                    <h4 class="mb-3">거래처 정보 업데이트</h4>
                 </div>
-                <div class="custom-control custom-radio">
-                    <input id="selectNone" name="selectMode" value="N" type="radio" class="custom-control-input" required>
-                    <label class="custom-control-label" for="selectNone">직접선택</label>
+                <div class="col">
+                    <h4 class="mb-3">엑셀로 바로 보내기</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <form id="companyUpdateForm" method="post" enctype="multipart/form-data">
+                        <input type="file" name="file"/>
+                        <button type="submit" class="btn btn-primary">업로드</button>
+                    </form>
+                </div>
+                <div class="col">
+                    <form id="uploadForm" method="post" enctype="multipart/form-data">
+                        <input id="csrf" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <input type="file" name="file"/>
+                        <button type="submit" class="btn btn-primary">업로드</button>
+                    </form>
                 </div>
             </div>
             <br/>
-            <table id="companyTable" class="display table table-striped table-bordered table-hover">
-                <thead>
-                <tr>
-                    <th>CompanyName</th>
-                    <th>Type</th>
-                    <th>PersonIncharge</th>
-                    <th>Position</th>
-                    <th>ContactNumb</th>
-
-                </tr>
-                </thead>
-                <!-- tbody 태그 필요 없다. -->
-            </table>
-
             <br/>
+            <br/>
+            <hr>
+            <br/>
+            <br/>
+            <div class="row">
+                <div class="col">
+                    <h4 class="mb-3">거래처 불러오기</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div>
+                        <form id="salesPersonForm">
+                            <select id="selectSalesPerson" multiple="multiple">
+                                <option value="cheese">Cheese</option>
+                                <option value="tomatoes">Tomatoes</option>
+                                <option value="mozarella">Mozzarella</option>
+                                <option value="mushrooms">Mushrooms</option>
+                                <option value="pepperoni">Pepperoni</option>
+                                <option value="onions">Onions</option>
+                            </select>
+                                <!--<input type="button" id="btnget" value="Get Selected Values" />-->
+                        </form>
+                    </div>
+                </div>
+                <div class="col">
+                    <div>
+                        <form id="typeForm">
+                            <select id="selectType" multiple="multiple">
+                                <option value="cheese">Cheese</option>
+                                <option value="tomatoes">Tomatoes</option>
+                                <option value="mozarella">Mozzarella</option>
+                                <option value="mushrooms">Mushrooms</option>
+                                <option value="pepperoni">Pepperoni</option>
+                                <option value="onions">Onions</option>
+                            </select>
+                                <!--<input type="button" id="btnget" value="Get Selected Values" />-->
+                        </form>
+                    </div>
+                </div>
+                <div class="col">
+                    <div>
+                        <form id="meatCutForm">
+                            <select id="selectMeatCut" multiple="multiple">
+                                <option value="cheese">Cheese</option>
+                                <option value="tomatoes">Tomatoes</option>
+                                <option value="mozarella">Mozzarella</option>
+                                <option value="mushrooms">Mushrooms</option>
+                                <option value="pepperoni">Pepperoni</option>
+                                <option value="onions">Onions</option>
+                                <option value="cheese">Cheese</option>
+                                <option value="tomatoes">Tomatoes</option>
+                                <option value="mozarella">Mozzarella</option>
+                                <option value="mushrooms">Mushrooms</option>
+                                <option value="pepperoni">Pepperoni</option>
+                                <option value="onions">Onions</option>
+                                <option value="cheese">Cheese</option>
+                                <option value="tomatoes">Tomatoes</option>
+                                <option value="mozarella">Mozzarella</option>
+                                <option value="mushrooms">Mushrooms</option>
+                                <option value="pepperoni">Pepperoni</option>
+                                <option value="onions">Onions</option>
+                                <option value="cheese">Cheese</option>
+                                <option value="tomatoes">Tomatoes</option>
+                                <option value="mozarella">Mozzarella</option>
+                                <option value="mushrooms">Mushrooms</option>
+                                <option value="pepperoni">Pepperoni</option>
+                                <option value="onions">Onions</option>
+                            </select>
+                                <!--<input type="button" id="btnget" value="Get Selected Values" />-->
+                        </form>
+                    </div>
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-primary" id="updateBtn">불러오기</button>
+                </div>
+            </div>
+            <br/>
+            <br/>
+            <br/>
+            <hr>
+            <br/>
+            <br/>
+            <h4 class="mb-3">거래처 리스트</h4>
+            <br>
+            <!--<div class="d-block my-3" id="selectAllRadio">-->
+                <!--<div class="custom-control custom-radio">-->
+                    <!--<input id="selectAll" name="selectMode" value="Y" type="radio" class="custom-control-input" checked required>-->
+                    <!--<label class="custom-control-label" for="selectAll">전체선택</label>-->
+                <!--</div>-->
+                <!--<div class="custom-control custom-radio">-->
+                    <!--<input id="selectNone" name="selectMode" value="N" type="radio" class="custom-control-input" required>-->
+                    <!--<label class="custom-control-label" for="selectNone">직접선택</label>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <div class="row">
+                <table id="companyTable" class="display table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <div class="col"><th>CompanyName</th></div>
+                        <div class="col"><th>Type</th></div>
+                        <div class="col"><th>PersonIncharge</th></div>
+                        <div class="col"><th>Position</th></div>
+                        <div class="col"><th>ContactNumb</th></div>
+                    </tr>
+                    </thead>
+                    <!-- tbody 태그 필요 없다. -->
+                </table>
+            </div>
+            <br/>
+            <br/>
+            <br/>
+            <hr>
             <br/>
             <br/>
             <h4 class="mb-3">Mode</h4>
 
-            <div class="d-block my-3" id="sendModeRadio">
-                <div class="custom-control custom-radio">
-                    <input id="testMode" name="sendMode" value="Y" type="radio" class="custom-control-input" checked required>
-                    <label class="custom-control-label" for="testMode">Test Mode</label>
+            <div class="row">
+                <div class="col">
+                    <div class="d-block my-3" id="sendModeRadio">
+                        <div class="custom-control custom-radio">
+                            <input id="testMode" name="sendMode" value="Y" type="radio" class="custom-control-input" checked required>
+                            <label class="custom-control-label" for="testMode">Test Mode</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input id="realMode" name="sendMode" value="N" type="radio" class="custom-control-input" required>
+                            <label class="custom-control-label" for="realMode">Real Mode</label>
+                        </div>
+                    </div>
                 </div>
-                <div class="custom-control custom-radio">
-                    <input id="realMode" name="sendMode" value="N" type="radio" class="custom-control-input" required>
-                    <label class="custom-control-label" for="realMode">Real Mode</label>
+                <div class="col-7">
+                    <div class="form-group">
+                        <label for="title">발신자번호 </label> <label for="title" class="text-danger">(주의)</label>
+                        <input type="text" class="form-control" id="title" name="title" placeholder="미리 등록된 번호 외에 직접입력을 원하시면 '-'를 빼고 숫자만 입력해주세요."/>
+                    </div>
                 </div>
+                <div class="col-3"></div>
             </div>
             <br/>
             <form id="send-message">
@@ -94,11 +197,14 @@
                 <button type="submit" id="btn-submit" class="btn btn-success clearfix pull-right">보내기</button>
                 <div class="clearfix"/>
             </form>
-
             <br/>
             <br/>
             <br/>
-
+            <hr>
+            <br/>
+            <br/>
+            <h4 class="mb-3">전송결과</h4>
+            <br/>
             <table class="table" id="msg-result">
                 <thead>
                 <tr>
@@ -118,7 +224,7 @@
             <br/>
             <br/>
 
-        </div>
+        <!--</div>-->
     </div>
 </div>
 </html>

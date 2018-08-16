@@ -1,6 +1,34 @@
 var companyTable;
 var contactNumb;
 
+$('#selectSalesPerson').multiselect({
+    includeSelectAllOption: true,
+    buttonWidth: '200px',
+    nonSelectedText: '영업사원 선택',
+    maxHeight: 300
+});
+
+$('#selectType').multiselect({
+    includeSelectAllOption: true,
+    buttonWidth: '200px',
+    nonSelectedText: '업종 선택',
+    maxHeight: 300
+
+});
+
+$('#selectMeatCut').multiselect({
+    includeSelectAllOption: true,
+    buttonWidth: '200px',
+    nonSelectedText: '품목 선택',
+    maxHeight: 300
+});
+
+$('#updateBtn').click(function() {
+    alert($('#selectSalesPerson').val());
+    alert($('#selectType').val());
+    alert($('#selectMeatCut').val());
+});
+
 $("#companyUpdateForm button[type=submit]").click(function (event) {
     company_update(event);
 });
@@ -31,9 +59,9 @@ function company_update(e) {
 
             companyTable = $('#companyTable').DataTable({
                 "data": companyData,
-                "select": {
-                    style: 'multi'
-                },
+                // "select": {
+                //     style: 'multi'
+                // },
                 "columns": [
                     {data: "companyName"},
                     {data: "type"},
@@ -103,9 +131,9 @@ function excel_upload(e) {
 
             companyTable = $('#companyTable').DataTable({
                 "data": companyData,
-                "select": {
-                    style: 'multi'
-                },
+                // "select": {
+                //     style: 'multi'
+                // },
                 "columns": [
                     {data: "companyName"},
                     {data: "type"},
