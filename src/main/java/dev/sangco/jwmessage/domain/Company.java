@@ -6,7 +6,6 @@ import org.apache.poi.ss.usermodel.Row;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @EqualsAndHashCode(of = "companyName", callSuper = false)
@@ -30,21 +29,18 @@ public class Company extends BaseTimeEntity {
     @Column(nullable = false)
     private String position;
 
-    @Column
-//    @Column(nullable = false)
+    @Column(nullable = false)
     private String contactNumb;
 
-//    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    @JoinColumn(foreignKey = @ForeignKey(name = "fk_company_account"))
-//    private Set<Account> accounts;
-//
-//    public void setAccount(Account account) {
-//        if (this.accounts == null) {
-//            this.accounts = new HashSet<>();
-//            this.accounts.add(account);
-//        }
-//        this.accounts.add(account);
-//    }
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_company_salesperson"))
+    private SalesPerson salesPerson;
+
+    @ManyToMany
+    @JoinTable(name = "COMPANY_MEATCUT",
+            joinColumns = @JoinColumn(name = "COMPANY_ID"),
+            inverseJoinColumns = @JoinColumn(name = "MEATCUT_ID"))
+    private Set<MeatCut> meatCuts = new HashSet<>();
 
     @Builder
     public Company(String companyName, String type, String personIncharge, String position, String contactNumb) {
