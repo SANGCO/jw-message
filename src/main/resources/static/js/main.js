@@ -39,16 +39,12 @@ function company_update(e) {
 
     var form = $("#companyUpdateForm")[0];
     var formData = new FormData(form);
-    var token = $("#csrf").val();
 
     $.ajax({
         type: "POST",
         enctype: "multipart/form-data",
         url: "/api/companies/upload",
         data: formData,
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("X-CSRF-TOKEN", token);
-        },
         processData: false,
         contentType: false,
         cache: false,
@@ -83,9 +79,6 @@ function company_update(e) {
         enctype: "multipart/form-data",
         url: "/api/companies/update",
         data: formData,
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("X-CSRF-TOKEN", token);
-        },
         processData: false,
         contentType: false,
         cache: false,
@@ -110,16 +103,12 @@ function excel_upload(e) {
 
     var form = $("#uploadForm")[0];
     var formData = new FormData(form);
-    var token = $("#csrf").val();
 
     $.ajax({
         type: "POST",
         enctype: "multipart/form-data",
         url: "/api/companies/upload",
         data: formData,
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("X-CSRF-TOKEN", token);
-        },
         processData: false,
         contentType: false,
         cache: false,
@@ -170,8 +159,6 @@ function send_message_ajax_submit(e) {
     // TODO contactNumb이 없으면 어럴트 띄우기
 
     var send = {};
-    var token = $("#csrf").val();
-
     send["receiver"] = contactNumb;
     send["title"] = $("#title").val();
     send["msg"] = $("#textarea").val();
@@ -185,9 +172,6 @@ function send_message_ajax_submit(e) {
         url: "/api/companies/send",
         data: JSON.stringify(send),
         dataType: 'json',
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("X-CSRF-TOKEN", token);
-        },
         success: function (data) {
             var result = '<tr>'
                 + '<td>' + data.message + '</td>'

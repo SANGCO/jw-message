@@ -18,20 +18,20 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @ActiveProfiles("test")
-public class ApiCompanyControllerTest extends AcceptanceTest {
-    public static final Logger log = LoggerFactory.getLogger(ApiCompanyControllerTest.class);
+public class ApiCompanyAcceptanceTest extends AcceptanceTest {
+    public static final Logger log = LoggerFactory.getLogger(ApiCompanyAcceptanceTest.class);
 
     @Autowired
     ExcelReadComponent excelReadComponent;
 
-    @Test
-    public void updateCompanies_Test() {
-        ResponseEntity<String> response = basicAuthTemplate(defaultLoginAccount)
-                .postForEntity("/api/companies/update", getRequest("companyList_update"), String.class);
-        log.debug("uploadCompanies_Test() - getHeaders() : " + response.getHeaders());
-        log.debug("uploadCompanies_Test() - getBody() : " + response.getBody());
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    }
+//    @Test
+//    public void updateCompanies_Test() {
+//        ResponseEntity<String> response = basicAuthTemplate(defaultLoginAccount)
+//                .postForEntity("/api/companies/update", getRequest("companyList_update"), String.class);
+//        log.debug("uploadCompanies_Test() - getHeaders() : " + response.getHeaders());
+//        log.debug("uploadCompanies_Test() - getBody() : " + response.getBody());
+//        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+//    }
 
 //    @Test
 //    public void uploadCompanies_Test() {

@@ -8,71 +8,84 @@ import dev.sangco.jwmessage.service.AccountService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.test.annotation.Commit;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 public abstract class AcceptanceTest {
-    protected static final String DEFAULT_LOGIN_ACCOUNT = "test1234";
-
+    public static final Logger log =  LoggerFactory.getLogger(AcceptanceTest.class);
+    
     @Autowired
-    protected TestRestTemplate testRestTemplate;
+    protected TestRestTemplate template;
 
-    @Autowired
-    protected AccountRepository accountRepository;
+    protected TestRestTemplate basicAuthTemplate;
 
     @Autowired
     protected AccountService accountService;
 
     @Autowired
-    private MessageSourceAccessor msa;
+    protected  AccountRepository accountRepository;
 
-    @LocalServerPort
-    protected int port;
+    @Autowired
+    protected MessageSourceAccessor msa;
 
-    protected Account defaultLoginAccount;
-
-    protected Account defaultAnotherAccount;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Before
     public void setUp() {
-        defaultLoginAccount = accountService.createAccount(getLoginAccount());
-//        defaultAnotherAccount = accountService.createAccount(getAnotherAccount());
+
+        Account account = accountRepository.save(getDefaultAccount());
+        basicAuthTemplate = template.withBasicAuth(account.getAccId(), account.getAccId()); // 아이디 == 비번
     }
 
-    protected TestRestTemplate basicAuthTemplate(Account paramAccount) {
-        return testRestTemplate.withBasicAuth(paramAccount.getAccId(), "123456");
+    @After
+    public void cleanUp() {
+        accountRepository.deleteAll();
     }
 
-    private AccountDto.Create getLoginAccount() {
-        return new AccountDto.Create("loginAccount", "123456", "123456", "로그인어카운트",
-                msa.getMessage("phoneNumb"), msa.getMessage("aligoId"), msa.getMessage("aligoKey"));
+    protected Account getDefaultAccount() {
+        return Account.builder()
+                .accId("default1213")
+                .password(passwordEncoder.encode("default1213"))
+                .name("디폴트")
+                .phoneNumb(msa.getMessage("account.phoneNumb"))
+                .aligoId(msa.getMessage("account.aligoId"))
+                .aligoKey(msa.getMessage("account.aligoKey"))
+                .role(Role.ADMIN)
+                .build();
     }
 
-    protected AccountDto.Create getAnotherAccount() {
-        return new AccountDto.Create("anotherAccount", "123456", "123456", "어나더어카운트",
-                msa.getMessage("phoneNumb"), msa.getMessage("aligoId"), msa.getMessage("aligoKey"));
+    protected AccountDto.Create getCreateAccount() {
+        return AccountDto.Create.builder()
+                .accId("test1213")
+                .password("test1213")
+                .cpassword("test1213")
+                .name("테스트")
+                .phoneNumb(msa.getMessage("account.phoneNumb"))
+                .aligoId(msa.getMessage("account.aligoId"))
+                .aligoKey(msa.getMessage("account.aligoKey"))
+                .build();
     }
 
-    protected AccountDto.Create getAccountDtoCreate() {
-        return new AccountDto.Create(
-                "test1213", "123456", "123456", "테스트",
-                msa.getMessage("phoneNumb"), msa.getMessage("aligoId"), msa.getMessage("aligoKey"));
-    }
-
-    protected AccountDto.Update getAccountDtoUpdate() {
-        return new AccountDto.Update(
-                "123456", "123456", "업데이트테스트",
-                msa.getMessage("phoneNumb"), msa.getMessage("aligoId"), msa.getMessage("aligoKey"));
+    protected AccountDto.Update getUpdateAccount() {
+        return AccountDto.Update.builder()
+                .password("default1213")
+                .cpassword("default1213")
+                .name("업데이트")
+                .phoneNumb(msa.getMessage("account.phoneNumb"))
+                .aligoId(msa.getMessage("account.aligoId"))
+                .aligoKey(msa.getMessage("account.aligoKey"))
+                .build();
     }
 }

@@ -13,10 +13,10 @@
 
 <div layout:fragment="content">
     <div class="container">
+        <h2 class="text-danger" th:text="${error != null} ? ${error}"></h2>
         <div class="list-group">
             <a href="#" class="list-group-item active">회원가입</a>
             <div class="list-group-item">
-                <!-- TODO 서버단에서 밸리데이션 에러 메세지 넘기기 -->
                 <form id="join-form" action="/accounts/join" th:action="@{/accounts/join}" th:object="${create}" method="post">
                     <div class="form-group">
                         <label>아이디</label>
@@ -54,7 +54,6 @@
                         <div class="text-danger form-text" th:if="${#fields.hasErrors('aligoKey')}" th:errors="*{aligoKey}">Name Error</div>
                     </div>
                     <div>
-                        <input id="csrf" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                         <button type="submit" id="btn-submit" class="btn btn-primary">등록하기</button>
                     </div>
                 </form>

@@ -17,15 +17,6 @@ public class ExceptionHandlers {
     @Autowired
     private MessageSourceAccessor msa;
 
-    //  TODO API 방식이 아니라서 화면이 전환 되어야 한다.
-    @ExceptionHandler(AccountDuplicatedException.class)
-    public ResponseEntity handleAccountDuplicatedException(AccountDuplicatedException e) {
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setCode(msa.getMessage("e.accountDupl.c"));
-        errorResponse.setMessage("[ " + e.getMessage() + " ] " + msa.getMessage("e.accountDupl.m"));
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(AccountNotFoundException.class)
     public ResponseEntity handleAccountNotFoundException(AccountNotFoundException e) {
         ErrorResponse errorResponse = new ErrorResponse();
@@ -53,16 +44,8 @@ public class ExceptionHandlers {
     @ExceptionHandler(UnAuthenticationException.class)
     public ResponseEntity handleUnAuthenticationException(UnAuthenticationException e) {
         ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setCode(msa.getMessage("e.UnAuthentication.c"));
-        errorResponse.setMessage("[ " + e.getMessage() + " ] " + msa.getMessage("e.UnAuthentication.m"));
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(CpasswordNotMatchException.class)
-    public ResponseEntity handleCpasswordNotMatchException(CpasswordNotMatchException e) {
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setCode(msa.getMessage("e.CpasswordNotMatch.c"));
-        errorResponse.setMessage("[ " + e.getMessage() + " ] " + msa.getMessage("e.CpasswordNotMatch.m"));
+        errorResponse.setCode(msa.getMessage("e.unAuthentication.c"));
+        errorResponse.setMessage("[ " + e.getMessage() + " ] " + msa.getMessage("e.unAuthentication.m"));
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }

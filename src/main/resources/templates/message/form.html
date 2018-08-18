@@ -31,7 +31,6 @@
                 </div>
                 <div class="col">
                     <form id="uploadForm" method="post" enctype="multipart/form-data">
-                        <input id="csrf" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                         <input type="file" name="file"/>
                         <button type="submit" class="btn btn-primary">업로드</button>
                     </form>

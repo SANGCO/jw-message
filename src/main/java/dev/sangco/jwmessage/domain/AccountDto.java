@@ -9,12 +9,10 @@ import javax.validation.constraints.Size;
 
 public class AccountDto {
 
-    @EqualsAndHashCode
-    @ToString
+    @Data
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @Data
     public static class Create {
 
         @NotBlank(message = "아이디를 입력하세요.")
@@ -41,12 +39,10 @@ public class AccountDto {
         private String aligoKey;
     }
 
-    @EqualsAndHashCode
-    @ToString
+    @Data
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @Data
     public static class Response {
 
         private String accId;
@@ -54,12 +50,10 @@ public class AccountDto {
         private String phoneNumb;
     }
 
-    @EqualsAndHashCode
-    @ToString
+    @Data
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @Data
     public static class Update {
 
         @NotBlank(message = "패스워드를 입력해주세요.")

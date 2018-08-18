@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,11 +17,11 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 
 import javax.sql.DataSource;
 
-import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.*;
 
 @Configuration
 @EnableWebSecurity
-public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public PasswordEncoder passwordEncoder;
@@ -39,14 +38,14 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public MessageSourceAccessor msa;
 
     @Bean
-    public PersistentTokenBasedRememberMeServices persistentTokenBasedRememberMeServices(){
+    public PersistentTokenBasedRememberMeServices persistentTokenBasedRememberMeServices() {
         PersistentTokenBasedRememberMeServices persistentTokenBasedRememberMeServices
                 = new PersistentTokenBasedRememberMeServices(msa.getMessage("REMEMBER_ME_KEY"), userDetailsService, jdbcTokenRepository());
         return persistentTokenBasedRememberMeServices;
     }
 
     @Bean
-    public JdbcTokenRepositoryImpl jdbcTokenRepository(){
+    public JdbcTokenRepositoryImpl jdbcTokenRepository() {
         JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
         jdbcTokenRepository.setCreateTableOnStartup(false);
         jdbcTokenRepository.setDataSource(dataSource);
@@ -58,64 +57,32 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 
-
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web
-                .ignoring()
-                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
+        web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
     }
 
-    @Configuration
-    @Profile({"dev", "prod", "test_csrf"})
-    static class ProdWebSecurityConfig extends WebSecurityConfig {
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.httpBasic()
+                .and().csrf().disable()
+                .authorizeRequests()
+                .antMatchers(GET, "/api/companies/**").hasRole("ADMIN")
+                .antMatchers(POST, "/api/companies/**").hasRole("ADMIN")
+                .antMatchers(PUT, "/api/companies/**").hasRole("ADMIN")
+                .antMatchers(DELETE, "/api/companies/**").hasRole("ADMIN")
+                .antMatchers(GET, "/companies/**").hasRole("ADMIN")
+                .antMatchers(GET, "/message/**").hasRole("ADMIN")
+                .antMatchers(GET, "/storage/**").hasRole("ADMIN")
+                .anyRequest().permitAll()
 
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
+                .and().formLogin().loginPage("/accounts/login").failureUrl("/accounts/login?error=true")
+                .defaultSuccessUrl("/")
+                .usernameParameter("accId")
+                .passwordParameter("password")
 
-            http.httpBasic()
-                    .and().authorizeRequests()
-                    // TODO POST는 어떻게?
-                    .antMatchers(GET, "/api/companies/**").hasRole("ADMIN")
-//                .antMatchers(PUT, "/api/companies/**").hasRole("ADMIN")
-//                .antMatchers(DELETE, "/api/companies/**").hasRole("ADMIN")
-                    .antMatchers(GET, "/companies/**").hasRole("ADMIN")
-//                .antMatchers(PUT, "/companies/**").hasRole("ADMIN")
-//                .antMatchers(DELETE, "/companies/**").hasRole("ADMIN")
-                    .antMatchers(GET, "/message/**").hasRole("ADMIN")
-                    .antMatchers(GET, "/storage/**").hasRole("ADMIN")
-                    .anyRequest().permitAll()
-
-                    .and().formLogin().loginPage("/accounts/login").failureUrl("/accounts/login?error=true")
-                    .defaultSuccessUrl("/")
-                    .usernameParameter("accId")
-                    .passwordParameter("password")
-
-                    .and().logout().logoutUrl("/accounts/logout").logoutSuccessUrl("/").invalidateHttpSession(true)
-                    .and().exceptionHandling().accessDeniedPage("/accounts/accessDenied")
-                    .and().rememberMe().key(msa.getMessage("REMEMBER_ME_KEY")).rememberMeServices(persistentTokenBasedRememberMeServices());
-            // TODO 중복 로그인 처리
-        }
-    }
-
-    @Configuration
-    @Profile("test")
-    static class DevWebSecurityConfig extends WebSecurityConfig {
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-
-            http.httpBasic()
-                    .and().csrf().disable()
-                    .authorizeRequests()
-                    .antMatchers(GET, "/api/companies/**").hasRole("ADMIN")
-//                .antMatchers(PUT, "/api/companies/**").hasRole("ADMIN")
-//                .antMatchers(DELETE, "/api/companies/**").hasRole("ADMIN")
-                    .antMatchers(GET, "/companies/**").hasRole("ADMIN")
-//                .antMatchers(PUT, "/companies/**").hasRole("ADMIN")
-//                .antMatchers(DELETE, "/companies/**").hasRole("ADMIN")
-                    .antMatchers(GET, "/message/**").hasRole("ADMIN")
-                    .antMatchers(GET, "/storage/**").hasRole("ADMIN")
-                    .anyRequest().permitAll();
-        }
+                .and().logout().logoutUrl("/accounts/logout").logoutSuccessUrl("/").invalidateHttpSession(true)
+                .and().exceptionHandling().accessDeniedPage("/accounts/accessDenied")
+                .and().rememberMe().key(msa.getMessage("REMEMBER_ME_KEY")).rememberMeServices(persistentTokenBasedRememberMeServices());
     }
 }
