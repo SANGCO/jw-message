@@ -2,13 +2,17 @@ package dev.sangco.jwmessage.domain;
 
 import dev.sangco.jwmessage.support.domain.BaseTimeEntity;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.List;
 
+@Builder
 @EqualsAndHashCode(of = "accId", callSuper = false)
 @ToString
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -36,14 +40,12 @@ public class Account extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Builder
-    public Account(String accId, String password, String name, String phoneNumb, String aligoId, String aligoKey, Role role) {
-        this.accId = accId;
-        this.password = password;
-        this.name = name;
-        this.phoneNumb = phoneNumb;
-        this.aligoId = aligoId;
-        this.aligoKey = aligoKey;
-        this.role = role;
+    public Account update(AccountDto.Update uAccount) {
+        this.setPassword(uAccount.getPassword());
+        this.setName(uAccount.getName());
+        this.setPhoneNumb(uAccount.getPhoneNumb());
+        this.setAligoId(uAccount.getAligoId());
+        this.setAligoKey(uAccount.getAligoId());
+        return this;
     }
 }

@@ -6,9 +6,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-@Data
+
 public class AccountDto {
 
+    @EqualsAndHashCode
+    @ToString
+    @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
@@ -19,10 +22,8 @@ public class AccountDto {
         private String accId;
 
         @NotBlank(message = "패스워드를 입력해주세요.")
-        // password에 @Size 길이를 걸면 암호화해서 넣을 때 에러가 난다.
         private String password;
 
-        // TODO 패스워드 동일하게 들어 왔는지 확인하는 로직
         @NotBlank(message = "패스워드 확인을 입력해주세요.")
         private String cpassword;
 
@@ -40,6 +41,9 @@ public class AccountDto {
         private String aligoKey;
     }
 
+    @EqualsAndHashCode
+    @ToString
+    @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
@@ -50,16 +54,17 @@ public class AccountDto {
         private String phoneNumb;
     }
 
+    @EqualsAndHashCode
+    @ToString
+    @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
     public static class Update {
 
         @NotBlank(message = "패스워드를 입력해주세요.")
-        // password에 @Size 길이를 걸면 암호화해서 넣을 때 에러가 난다.
         private String password;
 
-        // TODO 패스워드 동일하게 들어 왔는지 확인하는 로직
         @NotBlank(message = "패스워드 확인을 입력해주세요.")
         private String cpassword;
 

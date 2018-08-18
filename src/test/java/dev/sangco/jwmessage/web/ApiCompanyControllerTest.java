@@ -1,6 +1,5 @@
 package dev.sangco.jwmessage.web;
 
-import dev.sangco.jwmessage.domain.Account;
 import dev.sangco.jwmessage.support.excel.ExcelReadComponent;
 import dev.sangco.jwmessage.support.http.HtmlFormDataBuilder;
 import dev.sangco.jwmessage.support.test.AcceptanceTest;
@@ -17,7 +16,6 @@ import org.springframework.util.MultiValueMap;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 @ActiveProfiles("test")
 public class ApiCompanyControllerTest extends AcceptanceTest {
@@ -30,7 +28,6 @@ public class ApiCompanyControllerTest extends AcceptanceTest {
     public void updateCompanies_Test() {
         ResponseEntity<String> response = basicAuthTemplate(defaultLoginAccount)
                 .postForEntity("/api/companies/update", getRequest("companyList_update"), String.class);
-
         log.debug("uploadCompanies_Test() - getHeaders() : " + response.getHeaders());
         log.debug("uploadCompanies_Test() - getBody() : " + response.getBody());
         assertThat(response.getStatusCode(), is(HttpStatus.OK));

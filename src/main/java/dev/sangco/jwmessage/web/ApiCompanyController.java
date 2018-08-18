@@ -55,6 +55,7 @@ public class ApiCompanyController {
     @Autowired
     private RestTemplate restTemplate;
 
+    // TODO URI 줄일까?
     @RequestMapping(value = "/update", method = POST)
     public ResponseEntity updateCompanies(@RequestParam("file") MultipartFile uploadfile) throws IOException, InvalidFormatException {
         List<Company> companies = getCompanies(uploadfile);

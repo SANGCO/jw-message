@@ -57,4 +57,12 @@ public class ExceptionHandlers {
         errorResponse.setMessage("[ " + e.getMessage() + " ] " + msa.getMessage("e.UnAuthentication.m"));
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(CpasswordNotMatchException.class)
+    public ResponseEntity handleCpasswordNotMatchException(CpasswordNotMatchException e) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setCode(msa.getMessage("e.CpasswordNotMatch.c"));
+        errorResponse.setMessage("[ " + e.getMessage() + " ] " + msa.getMessage("e.CpasswordNotMatch.m"));
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 }

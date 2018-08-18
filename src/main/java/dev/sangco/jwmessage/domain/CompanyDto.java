@@ -4,11 +4,14 @@ import lombok.*;
 
 import java.util.List;
 
-@Data
+
 public class CompanyDto {
 
-    private List<CompanyDto.Response> data;
-
+    @EqualsAndHashCode
+    @ToString
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     @Data
     public static class Response {
 

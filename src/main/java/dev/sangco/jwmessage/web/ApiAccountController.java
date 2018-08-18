@@ -36,9 +36,6 @@ public class ApiAccountController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @Autowired
-    private MessageSourceAccessor msa;
-
     @RequestMapping(value = "/{accId}", method = GET)
     public ResponseEntity getAccount(@PathVariable String accId) {
         return new ResponseEntity(modelMapper.map(

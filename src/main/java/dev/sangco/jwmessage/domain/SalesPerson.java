@@ -9,13 +9,6 @@ import javax.persistence.Id;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
 public class SalesPerson {
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    private Long id;
 
-    private String salesPersonName;
 }

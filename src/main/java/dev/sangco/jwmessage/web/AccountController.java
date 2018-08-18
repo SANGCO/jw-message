@@ -48,7 +48,7 @@ public class AccountController {
         try {
             accountService.createAccount(create);
         } catch (AccountDuplicatedException e) {
-            return e.getMessage();
+            return "redirect:/account/join";
         }
         return "redirect:/";
     }

@@ -8,9 +8,11 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@Builder
 @EqualsAndHashCode(of = "companyName", callSuper = false)
 @ToString
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -32,39 +34,30 @@ public class Company extends BaseTimeEntity {
     @Column(nullable = false)
     private String contactNumb;
 
-    @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_company_salesperson"))
-    private SalesPerson salesPerson;
+    // TODO '-' 빼고 넣자
+    private String salesPerson;
 
-    @ManyToMany
-    @JoinTable(name = "COMPANY_MEATCUT",
-            joinColumns = @JoinColumn(name = "COMPANY_ID"),
-            inverseJoinColumns = @JoinColumn(name = "MEATCUT_ID"))
-    private Set<MeatCut> meatCuts = new HashSet<>();
-
-    @Builder
-    public Company(String companyName, String type, String personIncharge, String position, String contactNumb) {
-        this.companyName = companyName;
-        this.type = type;
-        this.personIncharge = personIncharge;
-        this.position = position;
-        this.contactNumb = contactNumb;
-    }
+    private String meatCuts;
 
     public Company update(Company company) {
         this.type = company.getType();
         this.personIncharge = company.getPersonIncharge();
         this.position = company.getPosition();
         this.contactNumb = company.getContactNumb();
+        this.salesPerson = company.getSalesPerson();
+        this.meatCuts = company.getMeatCuts();
         return this;
     }
 
     public static Company ofRow(Row row) {
         return Company.builder()
-                .companyName(row.getCell(1).getStringCellValue())
-                .type(row.getCell(5).getStringCellValue())
-                .personIncharge(row.getCell(4).getStringCellValue())
+                .companyName(row.getCell(0).getStringCellValue())
+                .type(row.getCell(1).getStringCellValue())
+                .personIncharge(row.getCell(2).getStringCellValue())
                 .position(row.getCell(3).getStringCellValue())
-                .contactNumb(row.getCell(10).getStringCellValue()).build();
+                .contactNumb(row.getCell(4).getStringCellValue())
+                .salesPerson(row.getCell(5).getStringCellValue())
+                .meatCuts(row.getCell(6).getStringCellValue())
+                .build();
    }
 }

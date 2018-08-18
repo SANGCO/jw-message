@@ -11,14 +11,6 @@ import javax.persistence.Id;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
 public class MeatCut {
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    private Long id;
 
-    @Column(nullable = false)
-    private String meatCutName;
 }
