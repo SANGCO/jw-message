@@ -1,16 +1,11 @@
 package dev.sangco.jwmessage.domain;
 
-
 import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
-@Builder
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
@@ -18,9 +13,9 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Getter
 @Setter
 @Entity
-public class MeatCut {
+public class TypeOfBiz {
 
     @Id
     @Column(unique = true, nullable = false)
-    String meatCutName;
+    String type;
 }

@@ -49,11 +49,6 @@ public abstract class AcceptanceTest {
         basicAuthTemplate = template.withBasicAuth(account.getAccId(), account.getAccId()); // 아이디 == 비번
     }
 
-    @After
-    public void cleanUp() {
-        accountRepository.deleteAll();
-    }
-
     protected Account getDefaultAccount() {
         return Account.builder()
                 .accId("default1213")

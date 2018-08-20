@@ -1,5 +1,9 @@
 package dev.sangco.jwmessage.web;
 
+import dev.sangco.jwmessage.domain.MeatCutRepository;
+import dev.sangco.jwmessage.domain.SalesPerson;
+import dev.sangco.jwmessage.domain.SalesPersonRepository;
+import dev.sangco.jwmessage.domain.TypeOfBIzRepository;
 import dev.sangco.jwmessage.support.excel.ExcelReadComponent;
 import dev.sangco.jwmessage.support.http.HtmlFormDataBuilder;
 import dev.sangco.jwmessage.support.test.AcceptanceTest;
@@ -11,37 +15,47 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.MultiValueMap;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-@ActiveProfiles("test")
 public class ApiCompanyAcceptanceTest extends AcceptanceTest {
     public static final Logger log = LoggerFactory.getLogger(ApiCompanyAcceptanceTest.class);
 
     @Autowired
-    ExcelReadComponent excelReadComponent;
+    private ExcelReadComponent excelReadComponent;
 
-//    @Test
-//    public void updateCompanies_Test() {
-//        ResponseEntity<String> response = basicAuthTemplate(defaultLoginAccount)
-//                .postForEntity("/api/companies/update", getRequest("companyList_update"), String.class);
-//        log.debug("uploadCompanies_Test() - getHeaders() : " + response.getHeaders());
-//        log.debug("uploadCompanies_Test() - getBody() : " + response.getBody());
-//        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-//    }
+    @Autowired
+    private TypeOfBIzRepository typeOfBIzRepository;
 
-//    @Test
-//    public void uploadCompanies_Test() {
-//        ResponseEntity<String> response = basicAuthTemplate(defaultLoginAccount)
-//                .postForEntity("/api/companies/upload", getRequest("companyList"), String.class);
-//        log.debug("uploadCompanies_Test() - getHeaders() : " + response.getHeaders());
-//        log.debug("uploadCompanies_Test() - getBody() : " + response.getBody());
-//        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-//    }
-//
+    @Autowired
+    private SalesPersonRepository salesPersonRepository;
+
+    @Autowired
+    private MeatCutRepository meatCutRepository;
+
+    @Test
+    public void uploadCompanies_Test() {
+        ResponseEntity<String> response = basicAuthTemplate
+                .postForEntity("/api/companies/upload", getRequest("companyList"), String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        log.debug("header : {}", response.getHeaders());
+        log.debug("body : {}", response.getBody());
+    }
+
+    @Test
+    public void updateCompanies_Test() {
+        ResponseEntity<String> response = basicAuthTemplate
+                .postForEntity("/api/companies/update", getRequest("companyList"), String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(typeOfBIzRepository.count(), is(5));
+        assertThat(salesPersonRepository.count(), is(1));
+        assertThat(meatCutRepository.count(), is(13));
+        log.debug("header : {}", response.getHeaders());
+        log.debug("body : {}", response.getBody());
+    }
+
 //    @Rollback(false)
 //    @Test
 //    public void sendMessage_Test() {

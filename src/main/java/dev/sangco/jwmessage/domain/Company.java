@@ -22,8 +22,9 @@ public class Company extends BaseTimeEntity {
     @Column(unique = true, nullable = false)
     private String companyName;
 
-    @Column(nullable = false)
-    private String type;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "type_of_biz")
+    private TypeOfBiz typeOfBiz;
 
     @Column(nullable = false)
     private String personIncharge;
@@ -34,30 +35,21 @@ public class Company extends BaseTimeEntity {
     @Column(nullable = false)
     private String contactNumb;
 
-    // TODO '-' 빼고 넣자
-    private String salesPerson;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "sales_person")
+    private SalesPerson salesPerson;
 
-    private String meatCuts;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_company_meatcuts"))
+    private Set<MeatCut> meatCuts;
 
-    public Company update(Company company) {
-        this.type = company.getType();
-        this.personIncharge = company.getPersonIncharge();
-        this.position = company.getPosition();
-        this.contactNumb = company.getContactNumb();
-        this.salesPerson = company.getSalesPerson();
-        this.meatCuts = company.getMeatCuts();
+    public Company update(Company uCompany) {
+        this.typeOfBiz = uCompany.getTypeOfBiz();
+        this.personIncharge = uCompany.getPersonIncharge();
+        this.position = uCompany.getPosition();
+        this.contactNumb = uCompany.getContactNumb();
+        this.salesPerson = uCompany.getSalesPerson();
+        this.meatCuts = uCompany.getMeatCuts();
         return this;
     }
-
-    public static Company ofRow(Row row) {
-        return Company.builder()
-                .companyName(row.getCell(0).getStringCellValue())
-                .type(row.getCell(1).getStringCellValue())
-                .personIncharge(row.getCell(2).getStringCellValue())
-                .position(row.getCell(3).getStringCellValue())
-                .contactNumb(row.getCell(4).getStringCellValue())
-                .salesPerson(row.getCell(5).getStringCellValue())
-                .meatCuts(row.getCell(6).getStringCellValue())
-                .build();
-   }
 }

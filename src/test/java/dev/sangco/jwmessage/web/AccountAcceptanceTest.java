@@ -1,7 +1,9 @@
 package dev.sangco.jwmessage.web;
 
+import com.querydsl.core.types.Predicate;
 import dev.sangco.jwmessage.common.AccountDuplicatedException;
 import dev.sangco.jwmessage.domain.Account;
+import dev.sangco.jwmessage.domain.QAccount;
 import dev.sangco.jwmessage.domain.Role;
 import dev.sangco.jwmessage.support.http.HtmlFormDataBuilder;
 import dev.sangco.jwmessage.support.test.AcceptanceTest;
@@ -11,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
+
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
@@ -95,6 +99,14 @@ public class AccountAcceptanceTest extends AcceptanceTest {
 //        assertThat(response.getStatusCode(), is(FOUND));
 //        log.debug("body : {}", response.getBody());
 //    }
+
+    @Test
+    public void crud() {
+        QAccount account = QAccount.account;
+        Predicate predicate = account.accId.containsIgnoreCase("default");
+        Optional<Account> one = accountRepository.findOne(predicate);
+        assertTrue(one.isPresent());
+    }
 
     private HttpEntity<MultiValueMap<String, Object>> getRequest(String param) {
         return HtmlFormDataBuilder.urlEncodedForm()

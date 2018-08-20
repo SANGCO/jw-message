@@ -1,6 +1,5 @@
 package dev.sangco.jwmessage.web;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.sangco.jwmessage.common.ErrorResponse;
 import dev.sangco.jwmessage.domain.*;
 import dev.sangco.jwmessage.service.AccountService;
@@ -37,36 +36,30 @@ public class ApiCompanyController {
     public static final Logger log = LoggerFactory.getLogger(ApiCompanyController.class);
 
     @Autowired
-    private CompanyService companyService;
-
-    @Autowired
     private AccountService accountService;
 
     @Autowired
-    private ExcelReadComponent excelReadComponent;
+    private CompanyService companyService;
 
     // TODO 일관성 있게 로직이 없어도 서비스를 만들어야 할까?
     @Autowired
     private SendResultRepository sendResultRepository;
 
     @Autowired
-    private ModelMapper modelMapper;
-
-    @Autowired
     private RestTemplate restTemplate;
 
-    // TODO URI 줄일까?
-    @RequestMapping(value = "/update", method = POST)
-    public ResponseEntity updateCompanies(@RequestParam("file") MultipartFile uploadfile) throws IOException, InvalidFormatException {
-        List<Company> companies = getCompanies(uploadfile);
-        companyService.updateCompanies(companies);
-        return new ResponseEntity(HttpStatus.OK);
-    }
 
     @RequestMapping(value = "/upload", method = POST)
     public ResponseEntity uploadCompanies(@RequestParam("file") MultipartFile uploadfile) throws IOException, InvalidFormatException {
-        List<Company> companies = getCompanies(uploadfile);
-        return new ResponseEntity(getResponses(companies), HttpStatus.OK);
+        return new ResponseEntity(companyService.getCompanyResponse(uploadfile), HttpStatus.OK);
+    }
+
+    // TODO URI 줄일까?
+    // TODO 익셉션 발생하는거 처리하기
+    @RequestMapping(value = "/update", method = POST)
+    public ResponseEntity updateCompanies(@RequestParam("file") MultipartFile uploadfile) throws IOException, InvalidFormatException {
+        companyService.updateCompanies(uploadfile);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/send", method = POST)
@@ -90,17 +83,6 @@ public class ApiCompanyController {
         sendResult.setAcc_id(principal.getName());
         sendResultRepository.save(sendResult);
         return new ResponseEntity(sendResult, HttpStatus.OK);
-    }
-
-    private List<Company> getCompanies(MultipartFile uploadfile) throws IOException, InvalidFormatException {
-        return excelReadComponent.readExcelToList(uploadfile, (row -> Company.ofRow(row)));
-    }
-
-    private List<CompanyDto.Response> getResponses(List<Company> companies) {
-        return companies.stream().map(c -> {
-            CompanyDto.Response response = modelMapper.map(c, CompanyDto.Response.class);
-            return response;
-        }).collect(Collectors.toList());
     }
 }
 
