@@ -52,14 +52,8 @@
                     <div>
                         <form id="salesPersonForm">
                             <select id="selectSalesPerson" multiple="multiple">
-                                <option value="cheese">Cheese</option>
-                                <option value="tomatoes">Tomatoes</option>
-                                <option value="mozarella">Mozzarella</option>
-                                <option value="mushrooms">Mushrooms</option>
-                                <option value="pepperoni">Pepperoni</option>
-                                <option value="onions">Onions</option>
+                                <option th:each="salesPerson : ${salesPersons}" th:text="${salesPerson.salesPersonName}">option</option>
                             </select>
-                                <!--<input type="button" id="btnget" value="Get Selected Values" />-->
                         </form>
                     </div>
                 </div>
@@ -67,14 +61,8 @@
                     <div>
                         <form id="typeForm">
                             <select id="selectType" multiple="multiple">
-                                <option value="cheese">Cheese</option>
-                                <option value="tomatoes">Tomatoes</option>
-                                <option value="mozarella">Mozzarella</option>
-                                <option value="mushrooms">Mushrooms</option>
-                                <option value="pepperoni">Pepperoni</option>
-                                <option value="onions">Onions</option>
+                                <option th:each="typeOfBiz : ${typeOfBizs}" th:text="${typeOfBiz.type}">option</option>
                             </select>
-                                <!--<input type="button" id="btnget" value="Get Selected Values" />-->
                         </form>
                     </div>
                 </div>
@@ -82,32 +70,8 @@
                     <div>
                         <form id="meatCutForm">
                             <select id="selectMeatCut" multiple="multiple">
-                                <option value="cheese">Cheese</option>
-                                <option value="tomatoes">Tomatoes</option>
-                                <option value="mozarella">Mozzarella</option>
-                                <option value="mushrooms">Mushrooms</option>
-                                <option value="pepperoni">Pepperoni</option>
-                                <option value="onions">Onions</option>
-                                <option value="cheese">Cheese</option>
-                                <option value="tomatoes">Tomatoes</option>
-                                <option value="mozarella">Mozzarella</option>
-                                <option value="mushrooms">Mushrooms</option>
-                                <option value="pepperoni">Pepperoni</option>
-                                <option value="onions">Onions</option>
-                                <option value="cheese">Cheese</option>
-                                <option value="tomatoes">Tomatoes</option>
-                                <option value="mozarella">Mozzarella</option>
-                                <option value="mushrooms">Mushrooms</option>
-                                <option value="pepperoni">Pepperoni</option>
-                                <option value="onions">Onions</option>
-                                <option value="cheese">Cheese</option>
-                                <option value="tomatoes">Tomatoes</option>
-                                <option value="mozarella">Mozzarella</option>
-                                <option value="mushrooms">Mushrooms</option>
-                                <option value="pepperoni">Pepperoni</option>
-                                <option value="onions">Onions</option>
+                                <option th:each="meatCut : ${meatCuts}" th:text="${meatCut.meatCutName}">option</option>
                             </select>
-                                <!--<input type="button" id="btnget" value="Get Selected Values" />-->
                         </form>
                     </div>
                 </div>

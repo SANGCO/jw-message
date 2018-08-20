@@ -43,47 +43,13 @@ function company_update(e) {
     $.ajax({
         type: "POST",
         enctype: "multipart/form-data",
-        url: "/api/companies/upload",
-        data: formData,
-        processData: false,
-        contentType: false,
-        cache: false,
-        success: function (companyData) {
-            $("#result").text(companyData);
-            console.log("SUCCESS : ", companyData);
-            $("#btnSubmit").prop("disabled", false);
-
-            companyTable = $('#companyTable').DataTable({
-                "data": companyData,
-                // "select": {
-                //     style: 'multi'
-                // },
-                "columns": [
-                    {data: "companyName"},
-                    {data: "type"},
-                    {data: "personIncharge"},
-                    {data: "position"},
-                    {data: "contactNumb"}
-                ]
-            });
-        },
-        error: function (e) {
-            $("#result").text(e.responseJSON);
-            $("#btnSubmit").prop("disabled", false);
-
-        }
-    });
-
-    $.ajax({
-        type: "POST",
-        enctype: "multipart/form-data",
         url: "/api/companies/update",
         data: formData,
         processData: false,
         contentType: false,
         cache: false,
         success: function (data) {
-
+            console.log("success!" + data)
         },
         error: function (e) {
             $("#result").text(e.responseJSON);
