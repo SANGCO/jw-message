@@ -15,7 +15,6 @@ public class CompanyDto {
     @NoArgsConstructor
     @Data
     public static class ResponseS {
-
         private String companyName;
         private String type;
         private String personIncharge;
@@ -30,7 +29,6 @@ public class CompanyDto {
     @NoArgsConstructor
     @Data
     public static class ResponseO {
-
         private String companyName;
         private TypeOfBiz type;
         private String personIncharge;
@@ -44,8 +42,19 @@ public class CompanyDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
-    public static class Create {
+    public static class Request {
+        private String type;
+        private String salesPerson;
+        private String meatCuts;
+    }
 
+    @EqualsAndHashCode
+    @ToString
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    public static class Create {
         private String companyName;
         private String type;
         private String personIncharge;

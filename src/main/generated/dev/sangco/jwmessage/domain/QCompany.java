@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -16,6 +17,8 @@ import com.querydsl.core.types.Path;
 public class QCompany extends EntityPathBase<Company> {
 
     private static final long serialVersionUID = -445895671L;
+
+    private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QCompany company = new QCompany("company");
 
@@ -28,7 +31,7 @@ public class QCompany extends EntityPathBase<Company> {
     //inherited
     public final DateTimePath<java.sql.Timestamp> createDate = _super.createDate;
 
-    public final StringPath meatCuts = createString("meatCuts");
+    public final SetPath<MeatCut, QMeatCut> meatCuts = this.<MeatCut, QMeatCut>createSet("meatCuts", MeatCut.class, QMeatCut.class, PathInits.DIRECT2);
 
     //inherited
     public final DateTimePath<java.sql.Timestamp> modifiedDate = _super.modifiedDate;
@@ -37,20 +40,30 @@ public class QCompany extends EntityPathBase<Company> {
 
     public final StringPath position = createString("position");
 
-    public final StringPath salesPerson = createString("salesPerson");
+    public final QSalesPerson salesPerson;
 
-    public final StringPath type = createString("type");
+    public final QTypeOfBiz typeOfBiz;
 
     public QCompany(String variable) {
-        super(Company.class, forVariable(variable));
+        this(Company.class, forVariable(variable), INITS);
     }
 
     public QCompany(Path<? extends Company> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QCompany(PathMetadata metadata) {
-        super(Company.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QCompany(PathMetadata metadata, PathInits inits) {
+        this(Company.class, metadata, inits);
+    }
+
+    public QCompany(Class<? extends Company> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.salesPerson = inits.isInitialized("salesPerson") ? new QSalesPerson(forProperty("salesPerson")) : null;
+        this.typeOfBiz = inits.isInitialized("typeOfBiz") ? new QTypeOfBiz(forProperty("typeOfBiz")) : null;
     }
 
 }

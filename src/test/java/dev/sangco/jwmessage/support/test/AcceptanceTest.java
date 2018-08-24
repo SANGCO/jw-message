@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -82,5 +83,11 @@ public abstract class AcceptanceTest {
                 .aligoId(msa.getMessage("account.aligoId"))
                 .aligoKey(msa.getMessage("account.aligoKey"))
                 .build();
+    }
+
+
+    protected void log(ResponseEntity<String> response) {
+        log.debug("header : {}", response.getHeaders());
+        log.debug("body : {}", response.getBody());
     }
 }

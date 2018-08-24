@@ -1,5 +1,6 @@
 package dev.sangco.jwmessage.service;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import dev.sangco.jwmessage.common.CompanyNotFoundException;
 import dev.sangco.jwmessage.domain.*;
 import dev.sangco.jwmessage.support.excel.ExcelReadComponent;
@@ -13,10 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -26,6 +24,15 @@ public class CompanyService {
 
     @Autowired
     private CompanyRepository companyRepository;
+
+    @Autowired
+    private TypeOfBIzRepository typeOfBIzRepository;
+
+    @Autowired
+    private MeatCutRepository meatCutRepository;
+
+    @Autowired
+    private SalesPersonRepository salesPersonRepository;
 
     @Autowired
     private ExcelReadComponent excelReadComponent;
@@ -38,9 +45,15 @@ public class CompanyService {
     }
 
     public void updateCompanies(MultipartFile uploadfile) throws IOException, InvalidFormatException {
+        deleteEarlierData();
         for (CompanyDto.Create cAccount : getCompanyDtos(uploadfile)) {
             save(getCompany(cAccount));
         }
+    }
+
+    private void deleteEarlierData() {
+        companyRepository.deleteAll();
+        companyRepository.flush();
     }
 
     private Company getCompany(CompanyDto.Create cAccount) {
@@ -65,12 +78,44 @@ public class CompanyService {
     }
 
     public Company save(Company uCompany) {
-        Optional<Company> company = companyRepository.findByCompanyName(uCompany.getCompanyName());
-        if (company.isPresent()) {
-            return companyRepository.save(company.get().update(uCompany));
+//        Optional<Company> company = companyRepository.findByCompanyName(uCompany.getCompanyName());
+//        if (company.isPresent()) {
+//            return companyRepository.save(company.get().update(uCompany));
+//        }
+        return companyRepository.save(uCompany);
+    }
+
+    public List<CompanyDto.ResponseS> search(CompanyDto.Request cRequest) {
+
+        Set<MeatCut> meatCuts = new HashSet<>();
+        for (String meatCut : cRequest.getMeatCuts().split(",")) {
+            meatCuts.add(new MeatCut(meatCut));
         }
 
-        return companyRepository.save(uCompany);
+        Set<String> typeOfBizs = new HashSet<>();
+        for (String type : cRequest.getType().split(",")) {
+            typeOfBizs.add(type);
+        }
+
+        Set<String> salesPersons = new HashSet<>();
+        for (String type : cRequest.getSalesPerson().split(",")) {
+            salesPersons.add(type);
+        }
+
+        QCompany qCompany = QCompany.company;
+
+        BooleanExpression expression = qCompany.typeOfBiz.type.in(typeOfBizs)
+                .and(qCompany.salesPerson.salesPersonName.in(salesPersons))
+                .and(qCompany.meatCuts.any().in(meatCuts));
+
+        Iterable<Company> companies = companyRepository.findAll(expression);
+        List<CompanyDto.ResponseS> response = new ArrayList<>();
+        companies.forEach(c -> {
+            response.add(modelMapper.map(c, CompanyDto.ResponseS.class));
+            log.debug(c.toString());
+        });
+
+        return response;
     }
 
     public List<Company> findAll() {

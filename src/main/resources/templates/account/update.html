@@ -16,7 +16,6 @@
         <div class="list-group">
             <a href="#" class="list-group-item active">회원정보 수정</a>
             <div class="list-group-item">
-                <!-- TODO 서버단에서 밸리데이션 에러 메세지 넘기기 -->
                 <form id="join-form" action="#" th:action="@{/accounts/update/{accId}(accId=${update.accId})}"
                       th:object="${update}" method="post">
                     <input type="hidden" name="_method" value="put"/>

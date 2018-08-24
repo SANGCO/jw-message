@@ -13,7 +13,6 @@ $('#selectType').multiselect({
     buttonWidth: '200px',
     nonSelectedText: '업종 선택',
     maxHeight: 300
-
 });
 
 $('#selectMeatCut').multiselect({
@@ -21,12 +20,6 @@ $('#selectMeatCut').multiselect({
     buttonWidth: '200px',
     nonSelectedText: '품목 선택',
     maxHeight: 300
-});
-
-$('#updateBtn').click(function() {
-    alert($('#selectSalesPerson').val());
-    alert($('#selectType').val());
-    alert($('#selectMeatCut').val());
 });
 
 $("#companyUpdateForm button[type=submit]").click(function (event) {
@@ -41,21 +34,29 @@ function company_update(e) {
     var formData = new FormData(form);
 
     $.ajax({
-        type: "POST",
+        type: "PUT",
         enctype: "multipart/form-data",
-        url: "/api/companies/update",
+        url: "/api/companies",
         data: formData,
         processData: false,
         contentType: false,
         cache: false,
         success: function (data) {
             console.log("success!" + data)
+            location.reload();
+        },
+        beforeSend: function() {
+            $('.wrap-loading').removeClass('display-none');
+        },
+        complete: function() {
+            $('.wrap-loading').addClass('display-none');
         },
         error: function (e) {
             $("#result").text(e.responseJSON);
             $("#btnSubmit").prop("disabled", false);
 
-        }
+        },
+        timeout: 60000
     });
 };
 
@@ -73,7 +74,7 @@ function excel_upload(e) {
     $.ajax({
         type: "POST",
         enctype: "multipart/form-data",
-        url: "/api/companies/upload",
+        url: "/api/companies",
         data: formData,
         processData: false,
         contentType: false,
@@ -105,6 +106,52 @@ function excel_upload(e) {
     });
 };
 
+$("#companyFromDatabase button[type=submit]").click(function (event) {
+    company_from_database(event);
+});
+
+function company_from_database(e) {
+    console.log('company_from_database()')
+    e.preventDefault();
+
+    var search = {};
+    search['type'] = $('#selectType').val().join();
+    search['salesPerson'] = $('#selectSalesPerson').val().join();
+    search['meatCuts'] = $('#selectMeatCut').val().join();
+
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json',
+        url: '/api/companies/search',
+        data: JSON.stringify(search),
+        dataType: 'json',
+        cache: false,
+        success: function (companyData) {
+            $("#result").text(companyData);
+            console.log("SUCCESS : ", companyData);
+            $("#btnSubmit").prop("disabled", false);
+
+            companyTable = $('#companyTable').DataTable({
+                "data": companyData,
+                // "select": {
+                //     style: 'multi'
+                // },
+                "columns": [
+                    {data: "companyName"},
+                    {data: "type"},
+                    {data: "personIncharge"},
+                    {data: "position"},
+                    {data: "contactNumb"}
+                ]
+            });
+        },
+        error: function (e) {
+            $('#result').text(e.responseJSON);
+            $('#btnSubmit').prop('disabled', false);
+        }
+    });
+};
+
 $("#send-message button[type=submit]").click(function (event) {
     send_message_ajax_submit(event);
 });
@@ -121,8 +168,6 @@ function send_message_ajax_submit(e) {
     } else {
         contactNumb = companyTable.rows({selected: true}).data().map(v => v.contactNumb).join();
     }
-
-    // TODO contactNumb이 없으면 어럴트 띄우기
 
     var send = {};
     send["receiver"] = contactNumb;
@@ -148,7 +193,6 @@ function send_message_ajax_submit(e) {
                 + '</tr>';
             $("#response-data").append(result);
             // $("#btnSubmit").prop("disabled", false);
-            // TODO 막아 드리는게 좋을까?
         },
         error: function (e) {
             var result;

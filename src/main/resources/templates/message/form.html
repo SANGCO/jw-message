@@ -11,7 +11,6 @@
 
 <div layout:fragment="content" >
     <div class="container" id="main">
-        <!--<div class="panel panel-default content-main">-->
             <br/>
             <br/>
             <div class="row">
@@ -22,6 +21,7 @@
                     <h4 class="mb-3">엑셀로 바로 보내기</h4>
                 </div>
             </div>
+            <br/>
             <div class="row">
                 <div class="col">
                     <form id="companyUpdateForm" method="post" enctype="multipart/form-data">
@@ -47,38 +47,40 @@
                     <h4 class="mb-3">거래처 불러오기</h4>
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
-                    <div>
-                        <form id="salesPersonForm">
-                            <select id="selectSalesPerson" multiple="multiple">
-                                <option th:each="salesPerson : ${salesPersons}" th:text="${salesPerson.salesPersonName}">option</option>
-                            </select>
-                        </form>
+            <form id="companyFromDatabase" method="post">
+                <div class="row">
+                    <div class="col">
+                        <div>
+                            <form id="salesPersonForm">
+                                <select id="selectSalesPerson" multiple="multiple">
+                                    <option th:each="salesPerson : ${salesPersons}" th:text="${salesPerson.salesPersonName}">option</option>
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div>
+                            <form id="typeForm">
+                                <select id="selectType" multiple="multiple">
+                                    <option th:each="typeOfBiz : ${typeOfBizs}" th:text="${typeOfBiz.type}">option</option>
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div>
+                            <form id="meatCutForm">
+                                <select id="selectMeatCut" multiple="multiple">
+                                    <option th:each="meatCut : ${meatCuts}" th:text="${meatCut.meatCutName}">option</option>
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary">불러오기</button>
                     </div>
                 </div>
-                <div class="col">
-                    <div>
-                        <form id="typeForm">
-                            <select id="selectType" multiple="multiple">
-                                <option th:each="typeOfBiz : ${typeOfBizs}" th:text="${typeOfBiz.type}">option</option>
-                            </select>
-                        </form>
-                    </div>
-                </div>
-                <div class="col">
-                    <div>
-                        <form id="meatCutForm">
-                            <select id="selectMeatCut" multiple="multiple">
-                                <option th:each="meatCut : ${meatCuts}" th:text="${meatCut.meatCutName}">option</option>
-                            </select>
-                        </form>
-                    </div>
-                </div>
-                <div class="col">
-                    <button type="submit" class="btn btn-primary" id="updateBtn">불러오기</button>
-                </div>
-            </div>
+            </form>
             <br/>
             <br/>
             <br/>
@@ -188,8 +190,9 @@
             <br/>
             <br/>
             <br/>
-
-        <!--</div>-->
+        <div class="wrap-loading display-none">
+            <div><img src="/img/loading.gif" /></div>
+        </div>
     </div>
 </div>
 </html>

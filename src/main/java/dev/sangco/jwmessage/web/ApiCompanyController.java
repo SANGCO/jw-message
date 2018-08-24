@@ -28,7 +28,9 @@ import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @RestController
 @RequestMapping("/api/companies")
@@ -41,7 +43,6 @@ public class ApiCompanyController {
     @Autowired
     private CompanyService companyService;
 
-    // TODO 일관성 있게 로직이 없어도 서비스를 만들어야 할까?
     @Autowired
     private SendResultRepository sendResultRepository;
 
@@ -49,17 +50,21 @@ public class ApiCompanyController {
     private RestTemplate restTemplate;
 
 
-    @RequestMapping(value = "/upload", method = POST)
+    @RequestMapping(value = "", method = POST)
     public ResponseEntity uploadCompanies(@RequestParam("file") MultipartFile uploadfile) throws IOException, InvalidFormatException {
-        return new ResponseEntity(companyService.getCompanyResponse(uploadfile), HttpStatus.OK);
+        return new ResponseEntity(companyService.getCompanyResponse(uploadfile), OK);
     }
 
-    // TODO URI 줄일까?
-    // TODO 익셉션 발생하는거 처리하기
-    @RequestMapping(value = "/update", method = POST)
+    @RequestMapping(value = "", method = PUT)
     public ResponseEntity updateCompanies(@RequestParam("file") MultipartFile uploadfile) throws IOException, InvalidFormatException {
         companyService.updateCompanies(uploadfile);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(OK);
+    }
+
+    @RequestMapping(value = "/search", method = POST)
+    public ResponseEntity searchCompanyData(@RequestBody CompanyDto.Request cRequest) {
+        log.debug("어떻게 들어오는지 " + cRequest.toString());
+        return new ResponseEntity(companyService.search(cRequest), OK);
     }
 
     @RequestMapping(value = "/send", method = POST)
@@ -82,7 +87,7 @@ public class ApiCompanyController {
                 restTemplate.postForObject("https://apis.aligo.in/send/", request, SendResult.class);
         sendResult.setAcc_id(principal.getName());
         sendResultRepository.save(sendResult);
-        return new ResponseEntity(sendResult, HttpStatus.OK);
+        return new ResponseEntity(sendResult, OK);
     }
 }
 

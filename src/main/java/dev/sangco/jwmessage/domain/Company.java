@@ -3,6 +3,8 @@ package dev.sangco.jwmessage.domain;
 import dev.sangco.jwmessage.support.domain.BaseTimeEntity;
 import lombok.*;
 import org.apache.poi.ss.usermodel.Row;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -22,7 +24,7 @@ public class Company extends BaseTimeEntity {
     @Column(unique = true, nullable = false)
     private String companyName;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "type_of_biz")
     private TypeOfBiz typeOfBiz;
 
@@ -35,12 +37,14 @@ public class Company extends BaseTimeEntity {
     @Column(nullable = false)
     private String contactNumb;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "sales_person")
     private SalesPerson salesPerson;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_company_meatcuts"))
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "COMPANY_MEATCUT",
+            joinColumns = @JoinColumn(name = "COMPANY_NAME"),
+            inverseJoinColumns = @JoinColumn(name = "MEAT_CUT_NAME"))
     private Set<MeatCut> meatCuts;
 
     public Company update(Company uCompany) {

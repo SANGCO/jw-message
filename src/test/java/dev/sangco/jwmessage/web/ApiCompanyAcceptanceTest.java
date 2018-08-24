@@ -13,12 +13,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.springframework.http.HttpMethod.PUT;
 
 public class ApiCompanyAcceptanceTest extends AcceptanceTest {
     public static final Logger log = LoggerFactory.getLogger(ApiCompanyAcceptanceTest.class);
@@ -38,22 +40,31 @@ public class ApiCompanyAcceptanceTest extends AcceptanceTest {
     @Test
     public void uploadCompanies_Test() {
         ResponseEntity<String> response = basicAuthTemplate
-                .postForEntity("/api/companies/upload", getRequest("companyList"), String.class);
+                .postForEntity("/api/companies", getRequest("companyList"), String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        log.debug("header : {}", response.getHeaders());
-        log.debug("body : {}", response.getBody());
+        log(response);
     }
 
     @Test
     public void updateCompanies_Test() {
         ResponseEntity<String> response = basicAuthTemplate
-                .postForEntity("/api/companies/update", getRequest("companyList"), String.class);
+                .exchange("/api/companies", PUT, getRequest("companyList"), String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(typeOfBIzRepository.count(), is(5));
-        assertThat(salesPersonRepository.count(), is(1));
-        assertThat(meatCutRepository.count(), is(13));
-        log.debug("header : {}", response.getHeaders());
-        log.debug("body : {}", response.getBody());
+        assertThat(typeOfBIzRepository.count(), is(5L));
+        assertThat(salesPersonRepository.count(), is(2L));
+        assertThat(meatCutRepository.count(), is(13L));
+        log(response);
+        updateCompanies_deleteEarlierData_Test();
+    }
+
+    private void updateCompanies_deleteEarlierData_Test() {
+        ResponseEntity<String> response = basicAuthTemplate
+                .exchange("/api/companies", PUT, getRequest("companyList_update"), String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(typeOfBIzRepository.count(), is(2L));
+        assertThat(salesPersonRepository.count(), is(1L));
+        assertThat(meatCutRepository.count(), is(6L));
+        log(response);
     }
 
 //    @Rollback(false)
