@@ -26,10 +26,10 @@ public class CompanyService {
     private CompanyRepository companyRepository;
 
     @Autowired
-    private TypeOfBIzRepository typeOfBIzRepository;
+    private MeatCutRepository meatCutRepository;
 
     @Autowired
-    private MeatCutRepository meatCutRepository;
+    private TypeOfBIzRepository typeOfBIzRepository;
 
     @Autowired
     private SalesPersonRepository salesPersonRepository;
@@ -41,7 +41,7 @@ public class CompanyService {
     private ModelMapper modelMapper;
 
     public List<CompanyDto.ResponseS> getCompanyResponse(MultipartFile uploadfile) throws IOException, InvalidFormatException {
-        return getResponses(getCompanyDtos(uploadfile));
+        return getResponse(getCompanyDtos(uploadfile));
     }
 
     public void updateCompanies(MultipartFile uploadfile) throws IOException, InvalidFormatException {
@@ -49,6 +49,23 @@ public class CompanyService {
         for (CompanyDto.Create cAccount : getCompanyDtos(uploadfile)) {
             save(getCompany(cAccount));
         }
+    }
+
+    public List<CompanyDto.ResponseS> search(CompanyDto.Request cRequest) {
+        List<CompanyDto.ResponseS> response = new ArrayList<>();
+        companyRepository.findAll(getBooleanExpression(cRequest)).forEach(c -> {
+            response.add(modelMapper.map(c, CompanyDto.ResponseS.class));
+        });
+
+        return response;
+    }
+
+    public List<Company> findAll() {
+        return companyRepository.findAll();
+    }
+
+    public Company findByCompanyName(String companyName) {
+        return companyRepository.findByCompanyName(companyName).orElseThrow(() -> new CompanyNotFoundException(companyName));
     }
 
     private void deleteEarlierData() {
@@ -68,6 +85,41 @@ public class CompanyService {
                 .build();
     }
 
+    private Company save(Company uCompany) {
+        return companyRepository.save(uCompany);
+    }
+
+    private BooleanExpression getBooleanExpression(CompanyDto.Request cRequest) {
+        Set<MeatCut> meatCuts = setDefaultMeatCuts(cRequest.getMeatCuts());
+        Set<String> typeOfBizs = setDefaultType(cRequest.getType());
+        Set<String> salesPersons = setDefaultSalesPerson(cRequest.getSalesPerson());
+        QCompany qCompany = QCompany.company;
+        return qCompany.salesPerson.salesPersonName.in(salesPersons)
+                .and(qCompany.typeOfBiz.type.in(typeOfBizs))
+                .and(qCompany.meatCuts.any().in(meatCuts));
+    }
+
+    private Set<MeatCut> setDefaultMeatCuts(String paramMeatCuts) {
+        if (paramMeatCuts.equalsIgnoreCase("")) {
+            return meatCutRepository.findAll().stream().collect(Collectors.toSet());
+        }
+        return getMeatCuts(paramMeatCuts);
+    }
+
+    private Set<String> setDefaultType(String paramType) {
+        if (paramType.equalsIgnoreCase("")) {
+            return typeOfBIzRepository.findAll().stream().map(c -> { return c.getType(); }).collect(Collectors.toSet());
+        }
+        return getStringSet(paramType);
+    }
+
+    private Set<String> setDefaultSalesPerson(String paramSalesPerson) {
+        if (paramSalesPerson.equalsIgnoreCase("")) {
+            return salesPersonRepository.findAll().stream().map(c -> { return c.getSalesPersonName(); }).collect(Collectors.toSet());
+        }
+        return getStringSet(paramSalesPerson);
+    }
+
     private Set<MeatCut> getMeatCuts(String paramMeatCuts) {
         Set<MeatCut> meatCuts = new HashSet<>();
         for (String meatCut : paramMeatCuts.split(",")) {
@@ -77,63 +129,22 @@ public class CompanyService {
         return meatCuts;
     }
 
-    public Company save(Company uCompany) {
-//        Optional<Company> company = companyRepository.findByCompanyName(uCompany.getCompanyName());
-//        if (company.isPresent()) {
-//            return companyRepository.save(company.get().update(uCompany));
-//        }
-        return companyRepository.save(uCompany);
-    }
-
-    public List<CompanyDto.ResponseS> search(CompanyDto.Request cRequest) {
-
-        Set<MeatCut> meatCuts = new HashSet<>();
-        for (String meatCut : cRequest.getMeatCuts().split(",")) {
-            meatCuts.add(new MeatCut(meatCut));
-        }
-
+    private Set<String> getStringSet(String param) {
         Set<String> typeOfBizs = new HashSet<>();
-        for (String type : cRequest.getType().split(",")) {
+        for (String type : param.split(",")) {
             typeOfBizs.add(type);
         }
 
-        Set<String> salesPersons = new HashSet<>();
-        for (String type : cRequest.getSalesPerson().split(",")) {
-            salesPersons.add(type);
-        }
-
-        QCompany qCompany = QCompany.company;
-
-        BooleanExpression expression = qCompany.typeOfBiz.type.in(typeOfBizs)
-                .and(qCompany.salesPerson.salesPersonName.in(salesPersons))
-                .and(qCompany.meatCuts.any().in(meatCuts));
-
-        Iterable<Company> companies = companyRepository.findAll(expression);
-        List<CompanyDto.ResponseS> response = new ArrayList<>();
-        companies.forEach(c -> {
-            response.add(modelMapper.map(c, CompanyDto.ResponseS.class));
-            log.debug(c.toString());
-        });
-
-        return response;
-    }
-
-    public List<Company> findAll() {
-        return companyRepository.findAll();
-    }
-
-    public Company findByCompanyName(String companyName) {
-        return companyRepository.findByCompanyName(companyName).orElseThrow(() -> new CompanyNotFoundException(companyName));
+        return typeOfBizs;
     }
 
     private List<CompanyDto.Create> getCompanyDtos(MultipartFile uploadfile) throws IOException, InvalidFormatException {
         return excelReadComponent.readExcelToList(uploadfile, (row -> CompanyDto.ofRow(row)));
     }
 
-    private List<CompanyDto.ResponseS> getResponses(List<CompanyDto.Create> companies) {
+    private List<CompanyDto.ResponseS> getResponse(List<CompanyDto.Create> companies) {
         return companies.stream().map(c -> {
-            CompanyDto.ResponseS response = modelMapper.map(c, CompanyDto.ResponseS.class);
-            return response;
+            return modelMapper.map(c, CompanyDto.ResponseS.class);
         }).collect(Collectors.toList());
     }
 }

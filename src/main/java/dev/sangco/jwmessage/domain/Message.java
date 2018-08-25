@@ -7,8 +7,13 @@ import org.springframework.util.MultiValueMap;
 
 import javax.validation.constraints.NotBlank;
 
+@EqualsAndHashCode
+@ToString
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class Message {
 
     private final String encodingType = "utf-8";
@@ -34,22 +39,6 @@ public class Message {
     private String rdate;
     private String rtime;
     private String image;
-
-    @Builder
-    public Message(String userid, String key, String sender, String receiver, String msg,
-                   String title, String destination, String rdate, String rtime, String image, String testmode_yn) {
-        this.key = key;
-        this.userid = userid;
-        this.sender = sender;
-        this.receiver = receiver;
-        this.msg = msg;
-        this.title = title;
-        this.destination = destination;
-        this.rdate = rdate;
-        this.rtime = rtime;
-        this.image = image;
-        this.testmode_yn = testmode_yn;
-    }
 
     public HttpEntity<MultiValueMap<String, Object>> ofEntity() {
         return HtmlFormDataBuilder.urlEncodedForm()

@@ -46,14 +46,4 @@ public class Company extends BaseTimeEntity {
             joinColumns = @JoinColumn(name = "COMPANY_NAME"),
             inverseJoinColumns = @JoinColumn(name = "MEAT_CUT_NAME"))
     private Set<MeatCut> meatCuts;
-
-    public Company update(Company uCompany) {
-        this.typeOfBiz = uCompany.getTypeOfBiz();
-        this.personIncharge = uCompany.getPersonIncharge();
-        this.position = uCompany.getPosition();
-        this.contactNumb = uCompany.getContactNumb();
-        this.salesPerson = uCompany.getSalesPerson();
-        this.meatCuts = uCompany.getMeatCuts();
-        return this;
-    }
 }

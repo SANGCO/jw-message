@@ -49,7 +49,6 @@ public class ApiCompanyController {
     @Autowired
     private RestTemplate restTemplate;
 
-
     @RequestMapping(value = "", method = POST)
     public ResponseEntity uploadCompanies(@RequestParam("file") MultipartFile uploadfile) throws IOException, InvalidFormatException {
         return new ResponseEntity(companyService.getCompanyResponse(uploadfile), OK);
@@ -63,7 +62,6 @@ public class ApiCompanyController {
 
     @RequestMapping(value = "/search", method = POST)
     public ResponseEntity searchCompanyData(@RequestBody CompanyDto.Request cRequest) {
-        log.debug("어떻게 들어오는지 " + cRequest.toString());
         return new ResponseEntity(companyService.search(cRequest), OK);
     }
 
@@ -72,13 +70,12 @@ public class ApiCompanyController {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity(ErrorResponse.createErrorResponse(bindingResult), HttpStatus.BAD_REQUEST);
         }
-        log.debug("Message : " + message.toString());
         Account account = accountService.findByAccId(principal.getName());
         HttpEntity<MultiValueMap<String, Object>> request =
                 Message.builder()
                         .key(account.getAligoKey())
                         .userid(account.getAligoId())
-                        .sender(account.getPhoneNumb())
+                        .sender(message.getSender())
                         .receiver(message.getReceiver())
                         .msg(message.getMsg())
                         .title(message.getTitle())
@@ -90,5 +87,3 @@ public class ApiCompanyController {
         return new ResponseEntity(sendResult, OK);
     }
 }
-
-

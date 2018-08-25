@@ -87,15 +87,16 @@ function excel_upload(e) {
 
             companyTable = $('#companyTable').DataTable({
                 "data": companyData,
-                // "select": {
-                //     style: 'multi'
-                // },
+                "select": {
+                    style: 'multi'
+                },
                 "columns": [
                     {data: "companyName"},
                     {data: "type"},
                     {data: "personIncharge"},
                     {data: "position"},
-                    {data: "contactNumb"}
+                    {data: "contactNumb"},
+                    {data: "salesPerson"}
                 ]
             });
         },
@@ -132,23 +133,32 @@ function company_from_database(e) {
             $("#btnSubmit").prop("disabled", false);
 
             companyTable = $('#companyTable').DataTable({
-                "data": companyData,
-                // "select": {
-                //     style: 'multi'
-                // },
-                "columns": [
+                'data': companyData,
+                'destroy': true,
+                "select": {
+                    style: 'multi'
+                },
+                'columns': [
                     {data: "companyName"},
                     {data: "type"},
                     {data: "personIncharge"},
                     {data: "position"},
-                    {data: "contactNumb"}
+                    {data: "contactNumb"},
+                    {data: "salesPerson"}
                 ]
             });
+        },
+        beforeSend: function() {
+            $('.wrap-loading').removeClass('display-none');
+        },
+        complete: function() {
+            $('.wrap-loading').addClass('display-none');
         },
         error: function (e) {
             $('#result').text(e.responseJSON);
             $('#btnSubmit').prop('disabled', false);
-        }
+        },
+        timeout: 10000
     });
 };
 
@@ -160,55 +170,110 @@ function send_message_ajax_submit(e) {
     console.log("send_message_ajax_submit()")
     e.preventDefault();
 
-    var contactNumb;
-    console.log(contactNumb);
 
-    if ($("input[type='radio'][name='selectMode']:checked").val() == 'Y') {
-        contactNumb = companyTable.columns(4).data().join();
-    } else {
-        contactNumb = companyTable.rows({selected: true}).data().map(v => v.contactNumb).join();
+    function ajax_submit(sender, receiver) {
+
+        var send = {};
+        send["sender"] = sender;
+        send["receiver"] = receiver;
+        send["title"] = $("#title").val();
+        send["msg"] = $("#textarea").val();
+        send["testmode_yn"] = $("input[type='radio'][name='sendMode']:checked").val();
+
+        $.ajax({
+            type: 'POST',
+            contentType: "application/json",
+            url: "/api/companies/send",
+            data: JSON.stringify(send),
+            dataType: 'json',
+            success: function (data) {
+                var result = '<tr>'
+                    + '<td>' + data.message + '</td>'
+                    + '<td>' + data.msg_id + '</td>'
+                    + '<td>' + data.success_cnt + '</td>'
+                    + '<td>' + data.error_cnt + '</td>'
+                    + '<td>' + data.msg_type + '</td>'
+                    + '</tr>';
+                $("#response-data").append(result);
+                // $("#btnSubmit").prop("disabled", false);
+            },
+            error: function (e) {
+                var result;
+                for (var i = 0; i < e.responseJSON.errors.length; i++) {
+                    result += '<tr>'
+                        + '<td>' + e.responseJSON.errors[i].defaultMessage + '</td>'
+                        + '<td></td>'
+                        + '<td></td>'
+                        + '<td></td>'
+                        + '<td></td>'
+                        + '</tr>';
+                }
+                $("#response-data").append(result);
+                // $("#btnSubmit").prop("disabled", false);
+            }
+        });
     }
 
-    var send = {};
-    send["receiver"] = contactNumb;
-    send["title"] = $("#title").val();
-    send["msg"] = $("#textarea").val();
-    send["testmode_yn"] = $("input[type='radio'][name='sendMode']:checked").val();
+    function defaultSender() {
+        var pNumb = {};
 
-    $("#btn-submit").prop("disabled", false);
-
-    $.ajax({
-        type: 'POST',
-        contentType: "application/json",
-        url: "/api/companies/send",
-        data: JSON.stringify(send),
-        dataType: 'json',
-        success: function (data) {
-            var result = '<tr>'
-                + '<td>' + data.message + '</td>'
-                + '<td>' + data.msg_id + '</td>'
-                + '<td>' + data.success_cnt + '</td>'
-                + '<td>' + data.error_cnt + '</td>'
-                + '<td>' + data.msg_type + '</td>'
-                + '</tr>';
-            $("#response-data").append(result);
-            // $("#btnSubmit").prop("disabled", false);
-        },
-        error: function (e) {
-            var result;
-            for (var i = 0; i < e.responseJSON.errors.length; i++) {
-                result += '<tr>'
-                    + '<td>' + e.responseJSON.errors[i].defaultMessage + '</td>'
-                    + '<td></td>'
-                    + '<td></td>'
-                    + '<td></td>'
-                    + '<td></td>'
-                    + '</tr>';
-            }
-            $("#response-data").append(result);
-            // $("#btnSubmit").prop("disabled", false);
+        for (var i = 0; i < companyTable.context[0].aoData.length; i++) {
+            pNumb[companyTable.row(i).data().salesPerson] = [];
         }
-    });
+
+        for (var i = 0; i < companyTable.context[0].aoData.length; i++) {
+            pNumb[companyTable.row(i).data().salesPerson].push(companyTable.row(i).data().contactNumb);
+        }
+
+        var sender = Object.keys(pNumb).map(function (k) {
+            return k
+        });
+
+        var receiver = Object.keys(pNumb).map(function (k) {
+            return pNumb[k]
+        });
+
+        Array.prototype.division = function (n) {
+            var arr = this;
+            var len = arr.length;
+            var cnt = Math.floor(len / n) + (Math.floor(len % n) > 0 ? 1 : 0);
+            var tmp = [];
+
+            for (var i = 0; i < cnt; i++) {
+                tmp.push(arr.splice(0, n));
+            }
+
+            return tmp;
+        };
+
+        var numbObj = {};
+
+        // for (var i=0; i < sender.length; i++) {
+        //     numbObj[sender[i]] = [];
+        // }
+
+        for (var i = 0; i < receiver.length; i++) {
+            numbObj[sender[i]] = receiver[i].division(1000);
+        }
+
+        for (var i = 0; i < sender.length; i++) {
+            for (var j = 0; j < numbObj[sender[i]].length; j++) {
+                ajax_submit(sender[i], numbObj[sender[i]][j].join());
+            }
+        }
+    }
+
+    if ($("input[type='radio'][name='selectMode']:checked").val() == 'Y') {
+
+        if ($('#numbDirect').val() === "") {
+            defaultSender();
+        } else {
+            ajax_submit($('#numbDirect').val(), companyTable.columns(4).data().join());
+        }
+
+    } else {
+        ajax_submit($('#numbDirect').val(), companyTable.rows({selected: true}).data().map(v => v.contactNumb).join());
+    }
 }
 
 var calByte = {

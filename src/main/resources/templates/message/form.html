@@ -89,16 +89,16 @@
             <br/>
             <h4 class="mb-3">거래처 리스트</h4>
             <br>
-            <!--<div class="d-block my-3" id="selectAllRadio">-->
-                <!--<div class="custom-control custom-radio">-->
-                    <!--<input id="selectAll" name="selectMode" value="Y" type="radio" class="custom-control-input" checked required>-->
-                    <!--<label class="custom-control-label" for="selectAll">전체선택</label>-->
-                <!--</div>-->
-                <!--<div class="custom-control custom-radio">-->
-                    <!--<input id="selectNone" name="selectMode" value="N" type="radio" class="custom-control-input" required>-->
-                    <!--<label class="custom-control-label" for="selectNone">직접선택</label>-->
-                <!--</div>-->
-            <!--</div>-->
+            <div class="d-block my-3" id="selectAllRadio">
+                <div class="custom-control custom-radio">
+                    <input id="selectAll" name="selectMode" value="Y" type="radio" class="custom-control-input" checked required>
+                    <label class="custom-control-label" for="selectAll">전체선택</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input id="selectNone" name="selectMode" value="N" type="radio" class="custom-control-input" required>
+                    <label class="custom-control-label" for="selectNone">직접선택</label>
+                </div>
+            </div>
 
             <div class="row">
                 <div class="col">
@@ -110,6 +110,7 @@
                             <div class="col"><th>PersonIncharge</th></div>
                             <div class="col"><th>Position</th></div>
                             <div class="col"><th>ContactNumb</th></div>
+                            <div class="col"><th>SalesPerson</th></div>
                         </tr>
                         </thead>
                         <!-- tbody 태그 필요 없다. -->
@@ -137,13 +138,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-7">
+                <div class="col-4">
                     <div class="form-group">
                         <label for="title">발신자번호 </label> <label for="title" class="text-danger">(주의)</label>
-                        <input type="text" class="form-control" id="title" name="title" placeholder="미리 등록된 번호 외에 직접입력을 원하시면 '-'를 빼고 숫자만 입력해주세요."/>
+                        <input type="text" class="form-control" id="numbDirect" name="title" placeholder="발실번호를 직접 입력 할 수 있습니다."/>
                     </div>
                 </div>
-                <div class="col-3"></div>
+                <div class="col-6"></div>
             </div>
             <br/>
             <form id="send-message">
