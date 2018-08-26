@@ -170,7 +170,6 @@ function send_message_ajax_submit(e) {
     console.log("send_message_ajax_submit()")
     e.preventDefault();
 
-
     function ajax_submit(sender, receiver) {
 
         var send = {};
@@ -247,10 +246,6 @@ function send_message_ajax_submit(e) {
         };
 
         var numbObj = {};
-
-        // for (var i=0; i < sender.length; i++) {
-        //     numbObj[sender[i]] = [];
-        // }
 
         for (var i = 0; i < receiver.length; i++) {
             numbObj[sender[i]] = receiver[i].division(1000);
