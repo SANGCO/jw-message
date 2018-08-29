@@ -83,16 +83,15 @@ public class ApiCompanyAcceptanceTest extends AcceptanceTest {
         log(response);
     }
 
-//    @Test
-//    public void sendMessage_Test() {
-//        ResponseEntity<String> response =
-//        basicAuthTemplate(defaultLoginAccount).postForEntity("/api/companies/send", Message.builder()
-//                .title("테스트문자").msg("테스트문자 본문").receiver("01047579824,01025688681,01020934806")
-//                .testmode_yn("Y").build(), String.class);
-//        log.debug("sendMessage_Test() - getHeaders() : " + response.getHeaders());
-//        log.debug("sendMessage_Test() - getBody() : " + response.getBody());
-//        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-//    }
+    @Test
+    public void sendMessage_Test() {
+        ResponseEntity<String> response =
+        basicAuthTemplate.postForEntity("/api/companies/send", Message.builder()
+                .title("테스트문자").msg("테스트문자 본문").receiver("01047579824,01025688681,01020934806")
+                .testmode_yn("Y").build(), String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        log(response);
+    }
 
     private HttpEntity<MultiValueMap<String, Object>> getRequest(String fileName) {
         return HtmlFormDataBuilder

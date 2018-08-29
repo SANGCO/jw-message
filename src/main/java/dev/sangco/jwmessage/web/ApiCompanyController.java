@@ -70,20 +70,20 @@ public class ApiCompanyController {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity(ErrorResponse.createErrorResponse(bindingResult), HttpStatus.BAD_REQUEST);
         }
-        Account account = accountService.findByAccId(principal.getName());
-        HttpEntity<MultiValueMap<String, Object>> request =
-                Message.builder()
-                        .key(account.getAligoKey())
-                        .userid(account.getAligoId())
-                        .sender(message.getSender())
-                        .receiver(message.getReceiver())
-                        .msg(message.getMsg())
-                        .title(message.getTitle())
-                        .testmode_yn(message.getTestmode_yn()).build().ofEntity();
-        SendResult sendResult =
-                restTemplate.postForObject("https://apis.aligo.in/send/", request, SendResult.class);
+        SendResult sendResult = restTemplate.postForObject("https://apis.aligo.in/send/", getMessage(message, accountService.findByAccId(principal.getName())), SendResult.class);
         sendResult.setAcc_id(principal.getName());
         sendResultRepository.save(sendResult);
         return new ResponseEntity(sendResult, OK);
+    }
+
+    private HttpEntity<MultiValueMap<String, Object>> getMessage(@Valid @RequestBody Message message, Account account) {
+        return Message.builder()
+                .key(account.getAligoKey())
+                .userid(account.getAligoId())
+                .sender(message.getSender())
+                .receiver(message.getReceiver())
+                .msg(message.getMsg())
+                .title(message.getTitle())
+                .testmode_yn(message.getTestmode_yn()).build().ofEntity();
     }
 }
