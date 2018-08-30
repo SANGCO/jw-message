@@ -189,12 +189,19 @@ function send_message_ajax_submit(e) {
                 var result = '<tr>'
                     + '<td>' + data.message + '</td>'
                     + '<td>' + data.msg_id + '</td>'
+                    + '<td>' + sender + '</td>'
                     + '<td>' + data.success_cnt + '</td>'
                     + '<td>' + data.error_cnt + '</td>'
                     + '<td>' + data.msg_type + '</td>'
                     + '</tr>';
                 $("#response-data").append(result);
                 // $("#btnSubmit").prop("disabled", false);
+            },
+            beforeSend: function() {
+                $('.wrap-loading').removeClass('display-none');
+            },
+            complete: function() {
+                $('.wrap-loading').addClass('display-none');
             },
             error: function (e) {
                 var result;
@@ -205,11 +212,13 @@ function send_message_ajax_submit(e) {
                         + '<td></td>'
                         + '<td></td>'
                         + '<td></td>'
+                        + '<td></td>'
                         + '</tr>';
                 }
                 $("#response-data").append(result);
                 // $("#btnSubmit").prop("disabled", false);
-            }
+            },
+            timeout: 10000
         });
     }
 
