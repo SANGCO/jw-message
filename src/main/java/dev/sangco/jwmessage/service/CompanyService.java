@@ -139,7 +139,10 @@ public class CompanyService {
     }
 
     private List<CompanyDto.Create> getCompanyDtos(MultipartFile uploadfile) throws IOException, InvalidFormatException {
-        return excelReadComponent.readExcelToList(uploadfile, (row -> CompanyDto.ofRow(row)));
+        return excelReadComponent.readExcelToList(uploadfile, (row -> CompanyDto.ofRow(row)))
+                .stream().filter(c -> !(c.getCompanyName().equalsIgnoreCase("") ||
+                        c.getSalesPerson().equalsIgnoreCase("") ||
+                        c.getContactNumb().equalsIgnoreCase(""))).collect(Collectors.toList());
     }
 
     private List<CompanyDto.ResponseS> getResponse(List<CompanyDto.Create> companies) {

@@ -2,12 +2,8 @@ package dev.sangco.jwmessage.domain;
 
 import dev.sangco.jwmessage.support.domain.BaseTimeEntity;
 import lombok.*;
-import org.apache.poi.ss.usermodel.Row;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Builder
@@ -28,17 +24,15 @@ public class Company extends BaseTimeEntity {
     @JoinColumn(name = "type_of_biz")
     private TypeOfBiz typeOfBiz;
 
-    @Column(nullable = false)
     private String personIncharge;
 
-    @Column(nullable = false)
     private String position;
 
     @Column(nullable = false)
     private String contactNumb;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "sales_person")
+    @JoinColumn(name = "sales_person", nullable = false)
     private SalesPerson salesPerson;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

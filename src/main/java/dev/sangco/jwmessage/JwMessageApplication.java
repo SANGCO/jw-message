@@ -12,4 +12,3 @@ public class JwMessageApplication {
         SpringApplication.run(JwMessageApplication.class, args);
     }
 }
-

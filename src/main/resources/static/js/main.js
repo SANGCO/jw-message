@@ -52,7 +52,8 @@ function company_update(e) {
             $('.wrap-loading').addClass('display-none');
         },
         error: function (e) {
-            $("#result").text(e.responseJSON);
+            alert(e);
+            // $("#result").text(e.responseJSON);
             $("#btnSubmit").prop("disabled", false);
 
         },

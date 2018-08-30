@@ -1,5 +1,6 @@
 package dev.sangco.jwmessage.support.excel;
 
+import dev.sangco.jwmessage.domain.CompanyDto;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
