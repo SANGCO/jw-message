@@ -32,7 +32,7 @@ public class Company extends BaseTimeEntity {
     private String contactNumb;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "sales_person", nullable = false)
+    @JoinColumn(name = "sales_person")
     private SalesPerson salesPerson;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

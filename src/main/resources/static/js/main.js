@@ -52,8 +52,7 @@ function company_update(e) {
             $('.wrap-loading').addClass('display-none');
         },
         error: function (e) {
-            alert(e);
-            // $("#result").text(e.responseJSON);
+            alert(e.responseJSON.error);
             $("#btnSubmit").prop("disabled", false);
 
         },
@@ -102,7 +101,7 @@ function excel_upload(e) {
             });
         },
         error: function (e) {
-            $("#result").text(e.responseJSON);
+            alert(e.responseJSON.error);
             $("#btnSubmit").prop("disabled", false);
         }
     });
@@ -156,7 +155,7 @@ function company_from_database(e) {
             $('.wrap-loading').addClass('display-none');
         },
         error: function (e) {
-            $('#result').text(e.responseJSON);
+            alert(e.responseJSON.error);
             $('#btnSubmit').prop('disabled', false);
         },
         timeout: 10000
