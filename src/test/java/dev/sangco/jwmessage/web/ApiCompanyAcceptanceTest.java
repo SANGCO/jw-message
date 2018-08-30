@@ -58,30 +58,30 @@ public class ApiCompanyAcceptanceTest extends AcceptanceTest {
         assertThat(salesPersonRepository.count(), is(2L));
         assertThat(meatCutRepository.count(), is(13L));
         log(response);
-        updateCompanies_deleteEarlierData_test();
-        searchCompanyData_Test();
+//        updateCompanies_deleteEarlierData_test();
+//        searchCompanyData_Test();
     }
 
-    private void updateCompanies_deleteEarlierData_test() {
-        ResponseEntity<String> response = basicAuthTemplate
-                .exchange("/api/companies", PUT, getRequest("companyList_update"), String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(typeOfBIzRepository.count(), is(2L));
-        assertThat(salesPersonRepository.count(), is(1L));
-        assertThat(meatCutRepository.count(), is(6L));
-        log(response);
-    }
-
-    private void searchCompanyData_Test() throws IOException {
-        ResponseEntity<String> response = basicAuthTemplate
-                .postForEntity("/api/companies/search", CompanyDto.Request.builder()
-                        .type("프랜차이즈").salesPerson("010-1234-5678").meatCuts("일반갈비").build(), String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        List<CompanyDto.ResponseS> companies = objectMapper.readValue(response.getBody(), new TypeReference<List<CompanyDto.ResponseS>>(){});
-        assertThat(companies.size(), is(2));
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        log(response);
-    }
+//    private void updateCompanies_deleteEarlierData_test() {
+//        ResponseEntity<String> response = basicAuthTemplate
+//                .exchange("/api/companies", PUT, getRequest("companyList_update"), String.class);
+//        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+//        assertThat(typeOfBIzRepository.count(), is(2L));
+//        assertThat(salesPersonRepository.count(), is(1L));
+//        assertThat(meatCutRepository.count(), is(6L));
+//        log(response);
+//    }
+//
+//    private void searchCompanyData_Test() throws IOException {
+//        ResponseEntity<String> response = basicAuthTemplate
+//                .postForEntity("/api/companies/search", CompanyDto.Request.builder()
+//                        .type("프랜차이즈").salesPerson("010-1234-5678").meatCuts("일반갈비").build(), String.class);
+//        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+//        List<CompanyDto.ResponseS> companies = objectMapper.readValue(response.getBody(), new TypeReference<List<CompanyDto.ResponseS>>(){});
+//        assertThat(companies.size(), is(2));
+//        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+//        log(response);
+//    }
 
     @Test
     public void sendMessage_Test() {
